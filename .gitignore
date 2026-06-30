@@ -1,0 +1,12 @@
+# QGIS PortalCrafter Git Control Isolation
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Isolate all base data assets locally
+input/
+
+# Isolate dynamic desktop session logs
+*.log
+.qgis4/
+profiles/

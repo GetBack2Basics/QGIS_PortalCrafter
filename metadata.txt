@@ -1,0 +1,17 @@
+[general]
+name=QGIS PortalCrafter
+qgisMinimumVersion=4.0
+qgisMaximumVersion=4.99
+description=Dynamic configuration-driven user interfaces and multi-format layer staging for QGIS.
+about=Transforms QGIS into a simplified user application. Bootstraps a complex mix of local files (GeoPackage, SpatiaLite, Shapefiles, KML, Rasters) and enterprise endpoints using a simple, clean YAML configuration file.
+version=4.0.0
+author=George Corea (GetBack2Basics)
+email=hello@mangoesmapping.com.au
+repository=https://github.com/GetBack2Basics/QGIS_PortalCrafter
+homepage=https://github.com/GetBack2Basics
+tracker=https://github.com/GetBack2Basics/QGIS_PortalCrafter/issues
+category=Plugins
+tags=portal, interface, customization, deployment, automation, gpkg, sqlite, yaml, corporate
+icon=icon.png
+experimental=False
+deprecated=False

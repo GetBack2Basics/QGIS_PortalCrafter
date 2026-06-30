@@ -1,0 +1,80 @@
+metadata:
+  portal_name: "Conservation Planning & Offsets Portal"
+  version: "4.0.0"
+  division: "CPO"
+
+interface_customization:
+  profile_name: "PortalCrafter_CPO"
+  hidden_toolbars: ["mAdvancedDigitizingToolBar", "mRasterToolBar", "mSnappingToolBar"]
+  hidden_docks: ["Browser", "ProcessingToolbox"]
+
+menus:
+  - name: "Cadastre & Infrastructure"
+    submenus:
+      - name: "Property & Roads"
+        items:
+          - name: "Load Staging Parcels"
+            layer_name: "Staging Property Boundaries (GPKG)"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/cadastre/nsw_parcels_staging.gpkg"
+              layer_name: "nsw_parcels_staging"
+          - name: "Load Local Roads"
+            layer_name: "Staging Road Network (SpatiaLite)"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/roads/nsw_roads_staging.sqlite"
+              layer_name: "nsw_roads_staging"
+
+  - name: "Statutory Conservation & Heritage"
+    submenus:
+      - name: "Biodiversity & Planning"
+        items:
+          - name: "Terrestrial Biodiversity"
+            layer_name: "Terrestrial Biodiversity Zones (SHP)"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/epi_terrestrial_biodiversity/epi_terrestrial_biodiversity.shp"
+          - name: "Regional Biodiversity Corridors"
+            layer_name: "Regional Biodiversity Corridors (KML)"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/regional_biodiversity_corridors.kml"
+      - name: "Heritage Act Listings"
+        items:
+          - name: "State Heritage Curtilages"
+            layer_name: "State Heritage Register (GeoJSON)"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/state_heritage_register.geojson"
+
+  - name: "Elevation & Terrain Models"
+    submenus:
+      - name: "Regional Terrain Datasets"
+        items:
+          - name: "State-wide 10m DEM"
+            layer_name: "NSW Regional 10m Terrain Raster"
+            provider: "gdal"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/raster/nsw_statewide_10m_dem.tif"
+          - name: "Hunter Region 1m DTM"
+            layer_name: "Hunter LiDAR 1m DTM (ELVIS Clip)"
+            provider: "gdal"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/raster/hunter_1m_dem.tif"
+
+custom_searches:
+  - search_name: "Find Lot By ID"
+    target_layer_name: "Staging Property Boundaries (GPKG)"
+    search_attribute: "lotNumber"
+    comparison_operator: "Equals"
+    ui_hint: "Enter exact lot number string"
+    results_display_columns: ["lotNumber", "planNumber"]
+    default_zoom_scale: 2500
+  - search_name: "Search Road Segment"
+    target_layer_name: "Staging Road Network (SpatiaLite)"
+    search_attribute: "roadName"
+    comparison_operator: "Like"
+    ui_hint: "Enter partial road name"
+    results_display_columns: ["roadName", "roadType"]
+    default_zoom_scale: 1500

@@ -2,6 +2,7 @@ metadata:
   portal_name: "Conservation Planning & Offsets Portal"
   version: "4.0.0"
   division: "CPO"
+  root_menu_name: "PortalCrafter"
 
 interface_customization:
   profile_name: "PortalCrafter_CPO"

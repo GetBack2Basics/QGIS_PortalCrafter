@@ -73,13 +73,20 @@ class PortalCrafterPlugin:
     def unload(self):
         if self.cleaner:
             self.cleaner.restore()
-        if self.menu_factory:
+        if getattr(self, 'menu_factory', None):
             self.menu_factory._clear_existing()
-        if self.search_dock:
-            self.iface.mainWindow().removeDockWidget(self.search_dock)
-            self.search_dock.deleteLater()
-        for action in self.actions:
-            self.iface.removePluginMenu("&PortalCrafter CPO", action)
+        if getattr(self, 'search_dock', None):
+            try:
+                self.iface.mainWindow().removeDockWidget(self.search_dock)
+                self.search_dock.deleteLater()
+            except Exception:
+                pass
+        menu_bar = self.iface.mainWindow().menuBar()
+        for action in menu_bar.actions():
+            menu = action.menu()
+            if menu is not None and menu.title() == "PortalCrafter":
+                menu_bar.removeAction(action)
+                break
         self.actions = []
 
 

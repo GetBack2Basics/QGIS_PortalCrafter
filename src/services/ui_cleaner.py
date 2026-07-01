@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Dict, List
 
 try:
@@ -25,6 +26,7 @@ class PortalUICleaner:
         self.config = config
         self.hidden_toolbars: List = []
         self.hidden_docks: List = []
+        self.hidden_menus: List = []
 
     def apply(self) -> None:
         targets = (self.config.interface_customization or {}).get("hidden_toolbars", [])
@@ -41,6 +43,15 @@ class PortalUICleaner:
                 if name in docks or obj_name in docks:
                     dock.setVisible(False)
                     self.hidden_docks.append(dock)
+            menu_bar = main.menuBar()
+            for action in menu_bar.actions():
+                menu = action.menu()
+                if menu is not None:
+                    title = menu.title() if hasattr(menu, "title") else ""
+                    if title.strip().lower() == "plugins":
+                        action.setVisible(False)
+                        self.hidden_menus.append(action)
+                        break
         self._log(
             "Interface cleaned for profile: %s"
             % (self.config.interface_customization or {}).get("profile_name", "default"),
@@ -52,9 +63,12 @@ class PortalUICleaner:
             toolbar.setVisible(True)
         for dock in self.hidden_docks:
             dock.setVisible(True)
+        for action in self.hidden_menus:
+            action.setVisible(True)
         self._log("Default interface restored.", level="info")
         self.hidden_toolbars.clear()
         self.hidden_docks.clear()
+        self.hidden_menus.clear()
 
     def _log(self, message: str, level: str = "info") -> None:
         if QgsMessageLog is not None and Qgis is not None and QCoreApplication is not None:

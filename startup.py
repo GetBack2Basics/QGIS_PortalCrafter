@@ -1,19 +1,20 @@
-from qgis.core import QgsMessageLog, Qgis
-from qgis.PyQt.QtCore import Qt
-from qgis.PyQt.QtWidgets import QAction, QMessageBox
+from qgis.core import QgsMessageLog, Qgis, QgsProject
+from qgis.PyQt.QtCore import Qt, QTimer
+from qgis.PyQt.QtWidgets import QMessageBox
 from qgis.utils import iface
+import os
 
 from src.services.config_parser import PortalConfigParser
 from src.services.layer_registry import LayerRegistry
 from src.services.ui_cleaner import PortalUICleaner
 from src.components.menu_factory import PortalMenuFactory
 from src.components.search_dock import PortalSearchDock
+from src.components.startup_selector import PortalStartupSelector
 
 
 class PortalCrafterPlugin:
     def __init__(self, iface):
         self.iface = iface
-        self.actions = []
         self.parser = PortalConfigParser(
             "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/portal_config.yaml"
         )
@@ -23,14 +24,19 @@ class PortalCrafterPlugin:
         self.search_dock: PortalSearchDock | None = None
 
     def initGui(self):
-        action = QAction("PortalCrafter CPO", self.iface.mainWindow())
-        action.triggered.connect(self._on_open)
-        self.iface.addPluginToMenu("&PortalCrafter CPO", action)
-        self.actions.append(action)
+        QTimer.singleShot(0, self._show_startup_selector)
 
-        self._bootstrap()
+    def _show_startup_selector(self) -> None:
+        selector = PortalStartupSelector(self.iface.mainWindow())
+        result = selector.exec()
+        if result != QDialog.DialogCode.Accepted:
+            return
+        profile = selector.selected_profile()
+        if profile == "FullQGIS":
+            return
+        self._bootstrap_cultural()
 
-    def _bootstrap(self) -> None:
+    def _bootstrap_cultural(self) -> None:
         if not self.parser.load():
             QgsMessageLog.logMessage(
                 "PortalCrafter: config loader returned False.",
@@ -44,12 +50,20 @@ class PortalCrafterPlugin:
                 level=Qgis.MessageLevel.Warning,
             )
             return
+        project_path = "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects/cultural.qgz"
+        if project_path and os.path.exists(project_path):
+            QgsProject.instance().read(project_path)
+        else:
+            QgsMessageLog.logMessage(
+                "Target workspace file not found at: %s" % project_path,
+                "PortalCrafter",
+                Qgis.MessageLevel.Critical,
+            )
         self.registry.register_config(config)
         self.cleaner = PortalUICleaner(self.iface, config)
         self.cleaner.apply()
         self.menu_factory = PortalMenuFactory(self.iface, self.registry, config)
         self.menu_factory.build()
-        # Qt6-qualified dock placement flags
         self.search_dock = PortalSearchDock(self.iface.mainWindow(), registry=self.registry, config=config)
         self.search_dock.setAllowedAreas(
             Qt.DockWidgetArea.LeftDockWidgetArea | Qt.DockWidgetArea.RightDockWidgetArea
@@ -61,13 +75,6 @@ class PortalCrafterPlugin:
         QgsMessageLog.logMessage(
             "PortalCrafter CPO ready.",
             level=Qgis.MessageLevel.Info,
-        )
-
-    def _on_open(self):
-        QMessageBox.information(
-            self.iface.mainWindow(),
-            "PortalCrafter CPO",
-            "PortalCrafter CPO initialized.",
         )
 
     def unload(self):
@@ -87,10 +94,9 @@ class PortalCrafterPlugin:
             if menu is not None and menu.title() == "PortalCrafter":
                 menu_bar.removeAction(action)
                 break
-        self.actions = []
 
 
 def run():
-    bootstrap = PortalBootstrap(iface)
+    bootstrap = PortalCrafterPlugin(iface)
     bootstrap.initGui()
     return bootstrap

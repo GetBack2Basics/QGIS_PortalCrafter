@@ -1,6 +1,6 @@
 from qgis.core import QgsMessageLog, Qgis, QgsProject
 from qgis.PyQt.QtCore import Qt, QTimer
-from qgis.PyQt.QtWidgets import QMessageBox
+from qgis.PyQt.QtWidgets import QMessageBox, QDialog
 from qgis.utils import iface
 import os
 

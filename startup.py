@@ -3,13 +3,18 @@ from qgis.PyQt.QtCore import Qt, QTimer
 from qgis.PyQt.QtWidgets import QMessageBox, QDialog
 from qgis.utils import iface
 import os
+from pathlib import Path
 
 from src.services.config_parser import PortalConfigParser
 from src.services.layer_registry import LayerRegistry
 from src.services.ui_cleaner import PortalUICleaner
+from src.services.deployment_cleanup import DeploymentCleanup
 from src.components.menu_factory import PortalMenuFactory
 from src.components.search_dock import PortalSearchDock
 from src.components.startup_selector import PortalStartupSelector
+
+
+STAGE = "init"
 
 
 class PortalCrafterPlugin:
@@ -22,9 +27,33 @@ class PortalCrafterPlugin:
         self.cleaner: PortalUICleaner | None = None
         self.menu_factory: PortalMenuFactory | None = None
         self.search_dock: PortalSearchDock | None = None
+        STAGE = "init_done"
+
+    def _clean_deployed(self) -> None:
+        active_dir = Path(__file__).resolve().parent
+        plugin_dir = active_dir.parent
+        results = DeploymentCleanup.clean_deployed(plugin_root=plugin_dir, active_dir=active_dir)
+        removed = sum(1 for _, ok, _ in results if ok)
+        if removed:
+            QgsMessageLog.logMessage(
+                "PortalCrafter: cleaned %d deployed module artifacts before bootstrap."
+                % removed,
+                level=Qgis.MessageLevel.Info,
+            )
 
     def initGui(self):
-        QTimer.singleShot(0, self._show_startup_selector)
+        QgsMessageLog.logMessage(
+            "PortalCrafter: initGui STAGE=%s" % STAGE,
+            level=Qgis.MessageLevel.Info,
+        )
+        self._clean_deployed()
+        self._bootstrap_delayed = True
+        QTimer.singleShot(500, self._deferred_bootstrap)
+
+    def _deferred_bootstrap(self) -> None:
+        self._bootstrap_delayed = False
+        if getattr(self, "_startup_accept_cultural", False):
+            self._show_startup_selector()
 
     def _show_startup_selector(self) -> None:
         selector = PortalStartupSelector(self.iface.mainWindow())
@@ -34,6 +63,8 @@ class PortalCrafterPlugin:
         profile = selector.selected_profile()
         if profile == "FullQGIS":
             return
+        if profile == "Cultural":
+            QTimer.singleShot(0, self._load_cultural_project)
         self._bootstrap_cultural()
 
     def _bootstrap_cultural(self) -> None:
@@ -50,15 +81,6 @@ class PortalCrafterPlugin:
                 level=Qgis.MessageLevel.Warning,
             )
             return
-        project_path = "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects/cultural.qgz"
-        if project_path and os.path.exists(project_path):
-            QgsProject.instance().read(project_path)
-        else:
-            QgsMessageLog.logMessage(
-                "Target workspace file not found at: %s" % project_path,
-                "PortalCrafter",
-                Qgis.MessageLevel.Critical,
-            )
         self.registry.register_config(config)
         self.cleaner = PortalUICleaner(self.iface, config)
         self.cleaner.apply()
@@ -76,6 +98,19 @@ class PortalCrafterPlugin:
             "PortalCrafter CPO ready.",
             level=Qgis.MessageLevel.Info,
         )
+
+    def _load_cultural_project(self) -> None:
+        project_path = "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects/cultural.qgz"
+        if project_path and os.path.exists(project_path):
+            self.iface.mainWindow().setCursor(Qt.WaitCursor)
+            ok = QgsProject.instance().read(project_path)
+            self.iface.mainWindow().setCursor(Qt.ArrowCursor)
+            if not ok:
+                QgsMessageLog.logMessage(
+                    "QgsProject.read failed: %s" % project_path,
+                    "PortalCrafter",
+                    level=Qgis.MessageLevel.Critical,
+                )
 
     def unload(self):
         if self.cleaner:

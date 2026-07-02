@@ -159,11 +159,18 @@ class LayerRegistry:
         return "%s://%s?layername=%s" % (item.provider, info.path, info.layer_name or "")
 
     def _verify_path(self, path: str) -> bool:
-        if not path or not Path(path).exists():
+        if not path:
             msg = "Missing layer datasource: %s" % path
             self._log(msg, level="warning")
             return False
-        return True
+        try:
+            if any(sep in path for sep in [".zip", ".qgz"]) and ("|" in path or path.lower().endswith((".zip", ".qgz"))):
+                return True
+            return Path(path).exists()
+        except Exception as exc:
+            msg = "Layer datasource check failed for %s: %s" % (path, exc)
+            self._log(msg, level="warning")
+            return False
 
     def _log(self, message: str, level: str = "info") -> None:
         if QgsMessageLog is not None and Qgis is not None and QCoreApplication is not None:
@@ -175,3 +182,18 @@ class LayerRegistry:
             QgsMessageLog.logMessage(message, level=lvl)
         else:
             print("[%s] %s" % (level.upper(), message))
+
+
+def purge_active_portal_layers() -> None:
+    """
+    Safely removes all layers associated with the current profile 
+    from the map registry before initializing a new workspace.
+    """
+    try:
+        from qgis.core import QgsProject  # type: ignore
+        project = QgsProject.instance()
+        layer_ids = list(project.mapLayers().keys())
+        if layer_ids:
+            project.removeMapLayers(layer_ids)
+    except Exception as exc:
+        print("[WARN] purge_active_portal_layers failed: %s" % exc)

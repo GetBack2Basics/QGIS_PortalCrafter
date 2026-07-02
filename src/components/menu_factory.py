@@ -25,16 +25,12 @@ class PortalMenuFactory:
             return "cluster::%s" % item.name
         return "%s::%s" % (item.name, item.layer_name)
 
-    def build(self) -> None:
+    def build(self, active_profile_name: str = "PortalCrafter", profile_switcher_callback=None) -> None:
         self._clear_existing()
+        self._profile_switcher_callback = profile_switcher_callback
+        self._active_profile_name = active_profile_name
         menubar = self.iface.mainWindow().menuBar()
-        root_title = (
-            self.config.metadata.get("root_menu_name", "PortalCrafter")
-            if isinstance(getattr(self.config, "metadata", None), dict)
-            else "PortalCrafter"
-        )
-        if not root_title:
-            root_title = "PortalCrafter"
+        root_title = self._active_profile_name or "PortalCrafter"
 
         root = None
         for menu in menubar.findChildren(QMenu):
@@ -67,11 +63,46 @@ class PortalMenuFactory:
                     sub.addAction(action)
                     self.created_actions.append(action)
 
+        self._attach_profile_switchers(root)
+
         QgsMessageLog.logMessage(
-            "PortalCrafter: rendered %d groups with configured root_menu_name '%s'"
+            "PortalCrafter: rendered %d groups under active profile '%s'"
             % (len(self.config.menus), root_title),
             level=Qgis.MessageLevel.Info,
         )
+
+    def _attach_profile_switchers(self, root: "QMenu") -> None:  # type: ignore[name-defined]
+        profiles = self._available_profile_names()
+        if not profiles:
+            return
+        switcher_menu = root.addMenu("Switch Workspace")
+        for profile_name in profiles:
+            if profile_name == getattr(self, "_active_profile_name", None):
+                continue
+            action = QAction("Switch to %s Workspace" % profile_name, self.iface.mainWindow())
+            action.triggered.connect(
+                lambda checked=False, target=profile_name: self._on_profile_switch_requested(target)
+            )
+            switcher_menu.addAction(action)
+            self.created_actions.append(action)
+
+    def _available_profile_names(self) -> List[str]:
+        discovered: List[str] = []
+        try:
+            base = Path("/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects")
+            if base.exists():
+                for path in sorted(base.glob("*.qgz")):
+                    discovered.append(path.stem)
+        except Exception:
+            pass
+        if not discovered:
+            discovered = ["Cultural", "Biodiversity"]
+        return discovered
+
+    def _on_profile_switch_requested(self, target_profile_name: str) -> None:
+        callback = getattr(self, "_profile_switcher_callback", None)
+        if callable(callback):
+            callback(target_profile_name)
 
     def _on_item_triggered(self, item: MenuItem | MenuItemCluster, action: QAction, key: str) -> None:
         self._on_batch_triggered([item], action, key)

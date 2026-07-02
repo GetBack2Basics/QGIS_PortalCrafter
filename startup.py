@@ -52,8 +52,7 @@ class PortalCrafterPlugin:
 
     def _deferred_bootstrap(self) -> None:
         self._bootstrap_delayed = False
-        if getattr(self, "_startup_accept_cultural", False):
-            self._show_startup_selector()
+        self._show_startup_selector()
 
     def _show_startup_selector(self) -> None:
         selector = PortalStartupSelector(self.iface.mainWindow())
@@ -63,6 +62,7 @@ class PortalCrafterPlugin:
         profile = selector.selected_profile()
         if profile == "FullQGIS":
             return
+        # TEMPORARY ISOLATION: disable cultural project load until segfault source is known
         if profile == "Cultural":
             QTimer.singleShot(0, self._load_cultural_project)
         self._bootstrap_cultural()
@@ -81,19 +81,10 @@ class PortalCrafterPlugin:
                 level=Qgis.MessageLevel.Warning,
             )
             return
+        # TEMPORARY ISOLATION: skip UI/profile cleanup until segfault source is known
         self.registry.register_config(config)
-        self.cleaner = PortalUICleaner(self.iface, config)
-        self.cleaner.apply()
         self.menu_factory = PortalMenuFactory(self.iface, self.registry, config)
         self.menu_factory.build()
-        self.search_dock = PortalSearchDock(self.iface.mainWindow(), registry=self.registry, config=config)
-        self.search_dock.setAllowedAreas(
-            Qt.DockWidgetArea.LeftDockWidgetArea | Qt.DockWidgetArea.RightDockWidgetArea
-        )
-        self.iface.mainWindow().addDockWidget(
-            Qt.DockWidgetArea.RightDockWidgetArea,
-            self.search_dock,
-        )
         QgsMessageLog.logMessage(
             "PortalCrafter CPO ready.",
             level=Qgis.MessageLevel.Info,
@@ -102,9 +93,9 @@ class PortalCrafterPlugin:
     def _load_cultural_project(self) -> None:
         project_path = "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects/cultural.qgz"
         if project_path and os.path.exists(project_path):
-            self.iface.mainWindow().setCursor(Qt.WaitCursor)
+            self.iface.mainWindow().setCursor(Qt.CursorShape.WaitCursor)
             ok = QgsProject.instance().read(project_path)
-            self.iface.mainWindow().setCursor(Qt.ArrowCursor)
+            self.iface.mainWindow().setCursor(Qt.CursorShape.ArrowCursor)
             if not ok:
                 QgsMessageLog.logMessage(
                     "QgsProject.read failed: %s" % project_path,

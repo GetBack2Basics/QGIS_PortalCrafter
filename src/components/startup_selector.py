@@ -6,12 +6,18 @@ from qgis.PyQt.QtWidgets import (
     QRadioButton,
     QVBoxLayout,
 )
+from qgis.PyQt.QtCore import Qt
 
 
 class PortalStartupSelector(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("PortalCrafter Workspace")
+        self.setWindowFlags(
+            Qt.WindowType.Dialog
+            | Qt.WindowType.WindowTitleHint
+            | Qt.WindowType.WindowSystemMenuHint
+        )
         self.setModal(True)
 
         self.full_qgis = QRadioButton("Full QGIS")

@@ -31,6 +31,28 @@ menus:
     submenus:
       - name: "Biodiversity & Planning"
         items:
+          - name: "Load Core Ecosystem Constraints"
+            layers:
+              - layer_name: "BOS Biodiversity Values"
+                provider: "ogr"
+                connection_info:
+                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/environmental/bv_map.gpkg"
+                  layer_name: "bv_map"
+                scale_visibility:
+                  visible_zoomed_out_limit: 100000
+
+              - layer_name: "Coastal Wetlands Protection"
+                provider: "ogr"
+                connection_info:
+                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/environmental/wetlands/coastal_wetlands.shp"
+                scale_visibility:
+                  visible_zoomed_out_limit: 50000
+
+              - layer_name: "Littoral Rainforests Reserves"
+                provider: "ogr"
+                connection_info:
+                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/environmental/littoral_rainforests.kml"
+
           - name: "Terrestrial Biodiversity"
             layer_name: "Terrestrial Biodiversity Zones (SHP)"
             provider: "ogr"
@@ -63,6 +85,27 @@ menus:
             provider: "gdal"
             connection_info:
               path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/raster/hunter_1m_dem.tif"
+
+      - name: "Administrative & Utility Overlays"
+        items:
+          - name: "Load Regional Governance & Infrastructure"
+            layers:
+              - layer_name: "Native Title Claims Area"
+                provider: "ogr"
+                connection_info:
+                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/administrative/native_title_claims.gpkg"
+                  layer_name: "native_title_claims"
+
+              - layer_name: "LGA Boundaries Matrix"
+                provider: "ogr"
+                connection_info:
+                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/administrative/local_gov/lga_boundaries.sqlite"
+                  layer_name: "lga_boundaries"
+
+              - layer_name: "Electricity Transmission Lines"
+                provider: "ogr"
+                connection_info:
+                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/infrastructure/power/transmission_lines.shp"
 
 custom_searches:
   - search_name: "Find Lot By ID"

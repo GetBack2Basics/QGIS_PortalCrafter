@@ -19,6 +19,8 @@ from src.data.config_schema import (  # noqa: E402
     CustomSearch,
     Menu,
     MenuItem,
+    MenuItemCluster,
+    MenuItemLayer,
     PortalConfig,
     SubMenu,
 )
@@ -104,18 +106,42 @@ def _parse_menus(raw_menus: List[Dict[str, Any]]) -> List[Menu]:
     for raw_menu in raw_menus:
         submenus: List[SubMenu] = []
         for raw_sub in raw_menu.get("submenus", []):
-            items: List[MenuItem] = []
+            items: List[MenuItem | MenuItemCluster] = []
             for raw_item in raw_sub.get("items", []):
-                connection = raw_item.get("connection_info", {})
+                layers = raw_item.get("layers")
+                if layers is None:
+                    connection = raw_item.get("connection_info", {})
+                    items.append(
+                        MenuItem(
+                            name=raw_item.get("name", ""),
+                            layer_name=raw_item.get("layer_name", ""),
+                            provider=raw_item.get("provider", "ogr"),
+                            connection_info=ConnectionInfo(
+                                path=connection.get("path", ""),
+                                layer_name=connection.get("layer_name"),
+                            ),
+                        )
+                    )
+                    continue
+
+                parsed_layers: List[MenuItemLayer] = []
+                for raw_layer in layers:
+                    conn = raw_layer.get("connection_info", {})
+                    layer_name = conn.get("layer_name") or raw_layer.get("layer_name", "")
+                    parsed_layers.append(
+                        MenuItemLayer(
+                            name=raw_layer.get("layer_name", layer_name),
+                            provider=raw_layer.get("provider", "ogr"),
+                            connection_info=ConnectionInfo(
+                                path=conn.get("path", ""),
+                                layer_name=layer_name or None,
+                            ),
+                        )
+                    )
                 items.append(
-                    MenuItem(
+                    MenuItemCluster(
                         name=raw_item.get("name", ""),
-                        layer_name=raw_item.get("layer_name", ""),
-                        provider=raw_item.get("provider", "ogr"),
-                        connection_info=ConnectionInfo(
-                            path=connection.get("path", ""),
-                            layer_name=connection.get("layer_name"),
-                        ),
+                        layers=parsed_layers,
                     )
                 )
             submenus.append(

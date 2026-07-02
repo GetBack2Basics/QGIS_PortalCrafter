@@ -23,9 +23,22 @@ class MenuItem:
 
 
 @dataclass(frozen=True)
+class MenuItemLayer:
+    name: str
+    provider: str
+    connection_info: ConnectionInfo
+
+
+@dataclass(frozen=True)
+class MenuItemCluster:
+    name: str
+    layers: List[MenuItemLayer]
+
+
+@dataclass(frozen=True)
 class SubMenu:
     name: str
-    items: List[MenuItem]
+    items: List[MenuItem | MenuItemCluster]
 
 
 @dataclass(frozen=True)

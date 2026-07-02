@@ -1,6 +1,7 @@
+# DeployUTCMarker=202607020620
 from __future__ import annotations
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from qgis.core import QgsMapLayer, QgsMessageLog, Qgis
 from qgis.PyQt.QtWidgets import QMenu, QAction
@@ -35,12 +36,18 @@ class PortalMenuFactory:
         if not root_title:
             root_title = "PortalCrafter"
 
-        root = QMenu(root_title, menubar)
-        menubar.addMenu(root)
+        root = None
+        for menu in menubar.findChildren(QMenu):
+            if menu.title() == root_title:
+                root = menu
+                break
+        if root is None:
+            root = QMenu(root_title, menubar)
+            menubar.addMenu(root)
         self.created_menus.append(root)
 
         for group in self.config.menus:
-            if group.name == "FullQGIS":
+            if group.name == "Full QGIS":
                 continue
             branch = root.addMenu(group.name)
             for submenu in group.submenus:

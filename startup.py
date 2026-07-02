@@ -1,9 +1,14 @@
+# DeployUTCMarker=202607020620
+from datetime import datetime
 from qgis.core import QgsMessageLog, Qgis, QgsProject
 from qgis.PyQt.QtWidgets import QMenu, QAction
 from qgis.PyQt.QtCore import Qt
 from qgis.utils import iface
 import os
 from pathlib import Path
+
+# Deploy version marker for identifying deployed build.
+PLUGIN_VERSION = datetime.utcnow().strftime("%Y%m%d%H%M")
 
 from src.services.config_parser import PortalConfigParser
 from src.services.layer_registry import LayerRegistry
@@ -34,15 +39,17 @@ class PortalCrafterPlugin:
             )
 
     def initGui(self):
+        QgsMessageLog.logMessage(
+            "PortalCrafter: initGui STAGE=init version=%s build=%s"
+            % (PLUGIN_VERSION, Path(__file__).resolve()),
+            level=Qgis.MessageLevel.Info,
+        )
         self._clean_deployed()
         iface = self.iface
 
-        self._root_menu = QMenu("PortalCrafter", iface.mainWindow())
+        self._root_menu = QMenu("PortalCrafter v%s" % PLUGIN_VERSION, iface.mainWindow())
         menubar = iface.mainWindow().menuBar()
         menubar.addMenu(self._root_menu)
-
-        full = self._root_menu.addAction("Full QGIS")
-        full.triggered.connect(lambda: self._bootstrap("FullQGIS"))
 
         cultural = self._root_menu.addAction("Cultural")
         cultural.triggered.connect(lambda: self._bootstrap("Cultural"))
@@ -51,6 +58,10 @@ class PortalCrafterPlugin:
         bio.triggered.connect(lambda: self._bootstrap("Biodiversity"))
 
     def _bootstrap(self, profile: str) -> None:
+        QgsMessageLog.logMessage(
+            "PortalCrafter: bootstrap profile=%s" % profile,
+            level=Qgis.MessageLevel.Info,
+        )
         if profile == "Cultural":
             self._load_cultural_project()
 
@@ -71,7 +82,7 @@ class PortalCrafterPlugin:
 
         self.registry.register_config(config)
         self.menu_factory = PortalMenuFactory(self.iface, self.registry, config)
-        self.menu_factory.build()
+        self.menu_factory.build(self._root_menu)
         QgsMessageLog.logMessage(
             "PortalCrafter CPO ready (%s)." % profile,
             level=Qgis.MessageLevel.Info,
@@ -90,6 +101,16 @@ class PortalCrafterPlugin:
                     level=Qgis.MessageLevel.Critical,
                 )
 
+    def reset_loaded_keys(self) -> None:
+        if self.menu_factory is not None:
+            self.menu_factory.loaded_keys.clear()
+        for action in self._root_menu.actions():
+            action.setEnabled(True)
+
     def unload(self):
         if getattr(self, "_root_menu", None):
             self.iface.mainWindow().menuBar().removeAction(self._root_menu.menuAction())
+        QgsMessageLog.logMessage(
+            "PortalCrafter: unloaded",
+            level=Qgis.MessageLevel.Info,
+        )

@@ -40,15 +40,22 @@ class PortalMenuFactory:
         self.created_menus.append(root)
 
         for group in self.config.menus:
+            if group.name == "FullQGIS":
+                continue
             branch = root.addMenu(group.name)
             for submenu in group.submenus:
                 sub = branch.addMenu(submenu.name)
                 for item in submenu.items:
+                    layers_block = (
+                        list(item.layers)
+                        if isinstance(item, MenuItemCluster)
+                        else [item]
+                    )
                     action = QAction(item.name, self.iface.mainWindow())
                     key = self._item_key(item)
                     action.setEnabled(not bool(self.loaded_keys.get(key)))
                     action.triggered.connect(
-                        lambda checked=False, it=item, act=action, k=key: self._on_item_triggered(it, act, k)
+                        lambda checked=False, blk=layers_block, act=action, k=key: self._on_batch_triggered(blk, act, k)
                     )
                     sub.addAction(action)
                     self.created_actions.append(action)
@@ -60,14 +67,25 @@ class PortalMenuFactory:
         )
 
     def _on_item_triggered(self, item: MenuItem | MenuItemCluster, action: QAction, key: str) -> None:
+        self._on_batch_triggered([item], action, key)
+
+    def _on_batch_triggered(self, layers_block: list, action: QAction, key: str) -> None:
         if key in self.loaded_keys:
             return
         tr = QCoreApplication.translate
-        if isinstance(item, MenuItemCluster):
-            for layer in item.layers:
-                self._load_cluster_layer(item.name, layer)
-        else:
-            self._load_menu_item(item)
+        for layer in layers_block:
+            if isinstance(layer, MenuItemCluster):
+                for inner in layer.layers:
+                    self._load_cluster_layer(layer.name, inner)
+            elif isinstance(layer, MenuItemLayer):
+                self._load_cluster_layer("batch", layer)
+            elif isinstance(layer, MenuItem):
+                self._load_menu_item(layer)
+            else:
+                QgsMessageLog.logMessage(
+                    tr("PortalMenuFactory", "Unsupported menu item type: %s") % type(layer).__name__,
+                    level=Qgis.MessageLevel.Warning,
+                )
         self.loaded_keys[key] = True
         action.setEnabled(False)
 

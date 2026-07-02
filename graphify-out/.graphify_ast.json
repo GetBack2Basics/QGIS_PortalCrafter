@@ -1,0 +1,1422 @@
+{
+  "nodes": [
+    {
+      "id": "crash_triage",
+      "label": "crash_triage.py",
+      "file_type": "code",
+      "source_file": "crash_triage.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_menu_factory",
+      "label": "menu_factory.py",
+      "file_type": "code",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_menu_factory_portalmenufactory",
+      "label": "PortalMenuFactory",
+      "file_type": "code",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_menu_factory_portalmenufactory_init",
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "layerregistry",
+      "label": "LayerRegistry",
+      "file_type": "code",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_menu_factory_py_portalconfig",
+      "label": "PortalConfig",
+      "file_type": "code",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_menu_factory_portalmenufactory_item_key",
+      "label": "._item_key()",
+      "file_type": "code",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L22",
+      "_origin": "ast"
+    },
+    {
+      "id": "menuitem",
+      "label": "MenuItem",
+      "file_type": "code",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L22",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_menu_factory_portalmenufactory_build",
+      "label": ".build()",
+      "file_type": "code",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_menu_factory_portalmenufactory_on_item_triggered",
+      "label": "._on_item_triggered()",
+      "file_type": "code",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L56",
+      "_origin": "ast"
+    },
+    {
+      "id": "qaction",
+      "label": "QAction",
+      "file_type": "code",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L56",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_menu_factory_portalmenufactory_clear_existing",
+      "label": "._clear_existing()",
+      "file_type": "code",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L94",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_startup_selector",
+      "label": "startup_selector.py",
+      "file_type": "code",
+      "source_file": "src/components/startup_selector.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_startup_selector_portalstartupselector",
+      "label": "PortalStartupSelector",
+      "file_type": "code",
+      "source_file": "src/components/startup_selector.py",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "qdialog",
+      "label": "QDialog",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_startup_selector_portalstartupselector_init",
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "src/components/startup_selector.py",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "components_startup_selector_portalstartupselector_selected_profile",
+      "label": ".selected_profile()",
+      "file_type": "code",
+      "source_file": "src/components/startup_selector.py",
+      "source_location": "L37",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_deployment_cleanup",
+      "label": "deployment_cleanup.py",
+      "file_type": "code",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_deployment_cleanup_deploymentcleanup",
+      "label": "DeploymentCleanup",
+      "file_type": "code",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_deployment_cleanup_deploymentcleanup_remove_paths",
+      "label": "._remove_paths()",
+      "file_type": "code",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "path",
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_deployment_cleanup_deploymentcleanup_collect_pycache",
+      "label": "._collect_pycache()",
+      "file_type": "code",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L38",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_deployment_cleanup_deploymentcleanup_collect_stale_dirs",
+      "label": "._collect_stale_dirs()",
+      "file_type": "code",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L59",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_deployment_cleanup_deploymentcleanup_clean_deployed",
+      "label": ".clean_deployed()",
+      "file_type": "code",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L83",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_deployment_cleanup_rationale_10",
+      "label": "Remove runtime artifacts left after plugin updates.      Strict scope:     - tar",
+      "file_type": "rationale",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_ui_cleaner",
+      "label": "ui_cleaner.py",
+      "file_type": "code",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_ui_cleaner_portaluicleaner",
+      "label": "PortalUICleaner",
+      "file_type": "code",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_ui_cleaner_portaluicleaner_init",
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L24",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_services_ui_cleaner_py_portalconfig",
+      "label": "PortalConfig",
+      "file_type": "code",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L24",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_ui_cleaner_portaluicleaner_apply",
+      "label": ".apply()",
+      "file_type": "code",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L31",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_ui_cleaner_portaluicleaner_restore",
+      "label": ".restore()",
+      "file_type": "code",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L61",
+      "_origin": "ast"
+    },
+    {
+      "id": "services_ui_cleaner_portaluicleaner_log",
+      "label": "._log()",
+      "file_type": "code",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L73",
+      "_origin": "ast"
+    },
+    {
+      "id": "startup",
+      "label": "startup.py",
+      "file_type": "code",
+      "source_file": "startup.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "startup_portalcrafterplugin",
+      "label": "PortalCrafterPlugin",
+      "file_type": "code",
+      "source_file": "startup.py",
+      "source_location": "L20",
+      "_origin": "ast"
+    },
+    {
+      "id": "startup_portalcrafterplugin_init",
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "startup.py",
+      "source_location": "L21",
+      "_origin": "ast"
+    },
+    {
+      "id": "startup_portalcrafterplugin_clean_deployed",
+      "label": "._clean_deployed()",
+      "file_type": "code",
+      "source_file": "startup.py",
+      "source_location": "L32",
+      "_origin": "ast"
+    },
+    {
+      "id": "startup_portalcrafterplugin_initgui",
+      "label": ".initGui()",
+      "file_type": "code",
+      "source_file": "startup.py",
+      "source_location": "L44",
+      "_origin": "ast"
+    },
+    {
+      "id": "startup_portalcrafterplugin_deferred_bootstrap",
+      "label": "._deferred_bootstrap()",
+      "file_type": "code",
+      "source_file": "startup.py",
+      "source_location": "L53",
+      "_origin": "ast"
+    },
+    {
+      "id": "startup_portalcrafterplugin_show_startup_selector",
+      "label": "._show_startup_selector()",
+      "file_type": "code",
+      "source_file": "startup.py",
+      "source_location": "L58",
+      "_origin": "ast"
+    },
+    {
+      "id": "startup_portalcrafterplugin_bootstrap_cultural",
+      "label": "._bootstrap_cultural()",
+      "file_type": "code",
+      "source_file": "startup.py",
+      "source_location": "L70",
+      "_origin": "ast"
+    },
+    {
+      "id": "startup_portalcrafterplugin_load_cultural_project",
+      "label": "._load_cultural_project()",
+      "file_type": "code",
+      "source_file": "startup.py",
+      "source_location": "L102",
+      "_origin": "ast"
+    },
+    {
+      "id": "startup_portalcrafterplugin_unload",
+      "label": ".unload()",
+      "file_type": "code",
+      "source_file": "startup.py",
+      "source_location": "L115",
+      "_origin": "ast"
+    },
+    {
+      "id": "startup_run",
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "startup.py",
+      "source_location": "L134",
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "crash_triage",
+      "target": "os",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "crash_triage.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "crash_triage",
+      "target": "sys",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "crash_triage.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "crash_triage",
+      "target": "traceback",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "crash_triage.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "crash_triage",
+      "target": "qgis_core",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "crash_triage.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory",
+      "target": "typing",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory",
+      "target": "qgis_core",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory",
+      "target": "qgis_pyqt_qtwidgets",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory",
+      "target": "qgis_pyqt_qtcore",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory",
+      "target": "src_data_config_schema",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory",
+      "target": "src_services_layer_registry",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory",
+      "target": "components_menu_factory_portalmenufactory",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory",
+      "target": "components_menu_factory_portalmenufactory_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory_init",
+      "target": "layerregistry",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory_init",
+      "target": "src_components_menu_factory_py_portalconfig",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory",
+      "target": "components_menu_factory_portalmenufactory_item_key",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory_item_key",
+      "target": "menuitem",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory",
+      "target": "components_menu_factory_portalmenufactory_build",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory",
+      "target": "components_menu_factory_portalmenufactory_on_item_triggered",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory_on_item_triggered",
+      "target": "menuitem",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory_on_item_triggered",
+      "target": "qaction",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory",
+      "target": "components_menu_factory_portalmenufactory_clear_existing",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L94",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory_build",
+      "target": "components_menu_factory_portalmenufactory_clear_existing",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory_build",
+      "target": "qaction",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory_build",
+      "target": "components_menu_factory_portalmenufactory_item_key",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "components_menu_factory_portalmenufactory_build",
+      "target": "components_menu_factory_portalmenufactory_on_item_triggered",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/menu_factory.py",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "components_startup_selector",
+      "target": "qgis_pyqt_qtwidgets",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/startup_selector.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "components_startup_selector",
+      "target": "components_startup_selector_portalstartupselector",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/startup_selector.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "components_startup_selector_portalstartupselector",
+      "target": "qdialog",
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/startup_selector.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "components_startup_selector_portalstartupselector",
+      "target": "components_startup_selector_portalstartupselector_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/startup_selector.py",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "components_startup_selector_portalstartupselector",
+      "target": "components_startup_selector_portalstartupselector_selected_profile",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/startup_selector.py",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup",
+      "target": "os",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup",
+      "target": "shutil",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup",
+      "target": "typing",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup",
+      "target": "services_deployment_cleanup_deploymentcleanup",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup",
+      "target": "services_deployment_cleanup_deploymentcleanup_remove_paths",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_remove_paths",
+      "target": "path",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_remove_paths",
+      "target": "path",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup",
+      "target": "services_deployment_cleanup_deploymentcleanup_collect_pycache",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_collect_pycache",
+      "target": "path",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_collect_pycache",
+      "target": "path",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_collect_pycache",
+      "target": "path",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup",
+      "target": "services_deployment_cleanup_deploymentcleanup_collect_stale_dirs",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_collect_stale_dirs",
+      "target": "path",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_collect_stale_dirs",
+      "target": "path",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_collect_stale_dirs",
+      "target": "path",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup",
+      "target": "services_deployment_cleanup_deploymentcleanup_clean_deployed",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_clean_deployed",
+      "target": "path",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_clean_deployed",
+      "target": "path",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_collect_pycache",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_clean_deployed",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_clean_deployed",
+      "target": "services_deployment_cleanup_deploymentcleanup_collect_pycache",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L86",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_clean_deployed",
+      "target": "services_deployment_cleanup_deploymentcleanup_collect_stale_dirs",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L86",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_deploymentcleanup_clean_deployed",
+      "target": "services_deployment_cleanup_deploymentcleanup_remove_paths",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "services_deployment_cleanup_rationale_10",
+      "target": "services_deployment_cleanup_deploymentcleanup",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/deployment_cleanup.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner",
+      "target": "os",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner",
+      "target": "typing",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner",
+      "target": "qgis_core",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner",
+      "target": "qgis_pyqt_qtwidgets",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner",
+      "target": "qgis_pyqt_qtcore",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner",
+      "target": "src_data_config_schema",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner",
+      "target": "services_ui_cleaner_portaluicleaner",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner_portaluicleaner",
+      "target": "services_ui_cleaner_portaluicleaner_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner_portaluicleaner_init",
+      "target": "src_services_ui_cleaner_py_portalconfig",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner_portaluicleaner",
+      "target": "services_ui_cleaner_portaluicleaner_apply",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner_portaluicleaner",
+      "target": "services_ui_cleaner_portaluicleaner_restore",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner_portaluicleaner",
+      "target": "services_ui_cleaner_portaluicleaner_log",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner_portaluicleaner_apply",
+      "target": "services_ui_cleaner_portaluicleaner_log",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "services_ui_cleaner_portaluicleaner_restore",
+      "target": "services_ui_cleaner_portaluicleaner_log",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/ui_cleaner.py",
+      "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "qgis_core",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "qgis_pyqt_qtcore",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "qgis_pyqt_qtwidgets",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "qgis_utils",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "os",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "src_services_config_parser",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "src_services_layer_registry",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "src_services_ui_cleaner",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "src_services_deployment_cleanup",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "src_components_menu_factory",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "src_components_search_dock",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "src_components_startup_selector",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "startup_portalcrafterplugin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "startup_portalcrafterplugin_init",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "startup_portalcrafterplugin_clean_deployed",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "startup_portalcrafterplugin_initgui",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "startup_portalcrafterplugin_deferred_bootstrap",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L53",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "startup_portalcrafterplugin_show_startup_selector",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "startup_portalcrafterplugin_bootstrap_cultural",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "startup_portalcrafterplugin_load_cultural_project",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "startup_portalcrafterplugin_unload",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L115",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "startup_run",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L134",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin_initgui",
+      "target": "startup_portalcrafterplugin_clean_deployed",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin_deferred_bootstrap",
+      "target": "startup_portalcrafterplugin_show_startup_selector",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin_show_startup_selector",
+      "target": "startup_portalcrafterplugin_bootstrap_cultural",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_run",
+      "target": "startup_portalcrafterplugin",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L135",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_run",
+      "target": "startup_portalcrafterplugin_initgui",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L136",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "services_ui_cleaner_portaluicleaner",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "services_deployment_cleanup_deploymentcleanup",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "components_menu_factory_portalmenufactory",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "startup",
+      "target": "components_startup_selector_portalstartupselector",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.py",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "services_ui_cleaner_portaluicleaner",
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "startup.py",
+      "source_location": "L10",
+      "weight": 0.8
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "services_deployment_cleanup_deploymentcleanup",
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "startup.py",
+      "source_location": "L11",
+      "weight": 0.8
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "components_menu_factory_portalmenufactory",
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "startup.py",
+      "source_location": "L12",
+      "weight": 0.8
+    },
+    {
+      "source": "startup_portalcrafterplugin",
+      "target": "components_startup_selector_portalstartupselector",
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "startup.py",
+      "source_location": "L14",
+      "weight": 0.8
+    },
+    {
+      "source": "startup_portalcrafterplugin_init",
+      "target": "layerregistry",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "startup.py",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin_clean_deployed",
+      "target": "path",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "startup.py",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin_show_startup_selector",
+      "target": "components_startup_selector_portalstartupselector",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "startup.py",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin_bootstrap_cultural",
+      "target": "services_ui_cleaner_portaluicleaner",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "startup.py",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
+      "source": "startup_portalcrafterplugin_bootstrap_cultural",
+      "target": "components_menu_factory_portalmenufactory",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "startup.py",
+      "source_location": "L87",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

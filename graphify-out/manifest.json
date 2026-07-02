@@ -1,0 +1,107 @@
+{
+  "__init__.py": {
+    "mtime": 1782791660.8879383,
+    "ast_hash": "f7fd243f11e72e83432e0524566b80d4",
+    "semantic_hash": "f7fd243f11e72e83432e0524566b80d4"
+  },
+  "launch-qgis-portal.sh": {
+    "mtime": 1782843742.3890805,
+    "ast_hash": "75338abada3816d8f69d55711584e031",
+    "semantic_hash": "75338abada3816d8f69d55711584e031"
+  },
+  "retrieval_cache.dat-manager_products.py": {
+    "mtime": 1782783244.2951696,
+    "ast_hash": "8c9cd06b823359b01d29020780459129",
+    "semantic_hash": "8c9cd06b823359b01d29020780459129"
+  },
+  "src/__init__.py": {
+    "mtime": 1782787869.830618,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "src/components/__init__.py": {
+    "mtime": 1782788404.073783,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "src/components/menu_factory.py": {
+    "mtime": 1782860758.8853786,
+    "ast_hash": "e776a0a25fc7e2136d782ee274f914fc",
+    "semantic_hash": ""
+  },
+  "src/components/search_dock.py": {
+    "mtime": 1782788530.0147357,
+    "ast_hash": "b59add56dffbb6d957309a186f30110c",
+    "semantic_hash": "b59add56dffbb6d957309a186f30110c"
+  },
+  "src/data/__init__.py": {
+    "mtime": 1782788376.0713487,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "src/data/config_schema.py": {
+    "mtime": 1782858551.4827123,
+    "ast_hash": "fc2fa28a2fd9bfdf13c579118942512c",
+    "semantic_hash": "fc2fa28a2fd9bfdf13c579118942512c"
+  },
+  "src/services/__init__.py": {
+    "mtime": 1782788376.0703487,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "src/services/config_parser.py": {
+    "mtime": 1782858551.4827123,
+    "ast_hash": "a1a8e002fc5198fd5faa9d51c00bfa66",
+    "semantic_hash": "a1a8e002fc5198fd5faa9d51c00bfa66"
+  },
+  "src/services/layer_registry.py": {
+    "mtime": 1782858551.4827123,
+    "ast_hash": "bb112277933ee687807fe8e27a3e861e",
+    "semantic_hash": "bb112277933ee687807fe8e27a3e861e"
+  },
+  "src/services/ui_cleaner.py": {
+    "mtime": 1782869945.371885,
+    "ast_hash": "e8d36087cb63c991034fa53a42b1b1b4",
+    "semantic_hash": ""
+  },
+  "startup.py": {
+    "mtime": 1782956987.0683093,
+    "ast_hash": "7a9b94cda0a1284858babc7a896c90a0",
+    "semantic_hash": ""
+  },
+  "tests/test_portal_bootstrap.py": {
+    "mtime": 1782789020.2443364,
+    "ast_hash": "be02ca9ffec36f616b247fa9b181ee68",
+    "semantic_hash": "be02ca9ffec36f616b247fa9b181ee68"
+  },
+  "crash_triage.py": {
+    "mtime": 1782945768.5952835,
+    "ast_hash": "09440316ac736639bffcd58b35c0dc07",
+    "semantic_hash": ""
+  },
+  "src/components/startup_selector.py": {
+    "mtime": 1782945776.046389,
+    "ast_hash": "ee2d592809caa643c2f43b7042b33057",
+    "semantic_hash": ""
+  },
+  "src/services/deployment_cleanup.py": {
+    "mtime": 1782956975.0781581,
+    "ast_hash": "599e129cffc13fea1339af17d3b5b67d",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1782788387.9145324,
+    "ast_hash": "e7566a63d4f4b35eab52dd95bd8dacaa",
+    "semantic_hash": ""
+  },
+  "metadata.txt": {
+    "mtime": 1782789483.1826177,
+    "ast_hash": "ba4c2f047ed1dd8a6d92504411ca475c",
+    "semantic_hash": ""
+  },
+  "portal_config.yaml": {
+    "mtime": 1782859890.5025647,
+    "ast_hash": "917834dc905bafd1593f235b3984fad0",
+    "semantic_hash": ""
+  }
+}

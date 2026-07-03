@@ -39,52 +39,33 @@ class PortalMenuFactory:
             menu = action.menu()
             if menu is not None and menu.title() == self._boot_root_title:
                 menubar.removeAction(action)
+        self.profile_menus.clear()
+        self.created_actions.clear()
         type(self)._boot_titles_seen.discard(self._boot_root_title)
 
     def build_boot_anchors(self, index: ProfileIndex, profile_click_callback: Optional[Callable[[str, str], None]] = None) -> Dict[str, QMenu]:
-        menubar = self.iface.mainWindow().menuBar()
-        existing = next(
-            (
-                action
-                for action in menubar.actions()
-                if action.menu() is not None and action.menu().title() == self._boot_root_title
-            ),
-            None,
-        )
-        if existing is not None:
-            self._ep("suppressing duplicate boot anchor build: %s" % self._boot_root_title)
-            return {
-                action.menu().title(): action.menu()
-                for action in menubar.actions()
-                if action.menu() is not None and action.menu().title() == self._boot_root_title
-            }
-        if self._boot_root_title in type(self)._boot_titles_seen:
-            self._ep("suppressing duplicate boot anchor build by seen-set: %s" % self._boot_root_title)
-            return {
-                action.menu().title(): action.menu()
-                for action in menubar.actions()
-                if action.menu() is not None and action.menu().title() == self._boot_root_title
-            }
-        type(self)._boot_titles_seen.add(self._boot_root_title)
-        self._ep("build_boot_anchors profiles=%s" % ",".join(index.ids()))
         self.purge_existing_menus()
-        self.index = index
-        self._profile_selected_callback = profile_click_callback
         menubar = self.iface.mainWindow().menuBar()
+
+        root_menu = QMenu(self._boot_root_title, menubar)
+        menubar.addMenu(root_menu)
 
         created: Dict[str, QMenu] = {}
         for entry in index.profiles:
-            menu = QMenu(entry.name, menubar)
+            profile_menu = root_menu.addMenu(entry.name)
             action = QAction("Load %s Workspace" % entry.name, self.iface.mainWindow())
             action.triggered.connect(
                 lambda checked=False, entry=entry: self._on_profile_clicked(entry)
             )
-            menu.addAction(action)
-            menubar.addMenu(menu)
-            self.profile_menus[entry.profile_id] = menu
-            created[entry.profile_id] = menu
+            profile_menu.addAction(action)
+            self.profile_menus[entry.profile_id] = profile_menu
+            created[entry.profile_id] = profile_menu
             self._ep("boot_anchor profile=%s" % entry.profile_id)
+
+        self.index = index
+        self._profile_selected_callback = profile_click_callback
         self._active_profile_id = index.profiles[0].profile_id if index.profiles else None
+        self._ep("build_boot_anchors profiles=%s" % ",".join(index.ids()))
         return created
 
     def build_submenus_for_profile(self, profile_id: str, overwrite: bool = True) -> None:
@@ -113,6 +94,7 @@ class PortalMenuFactory:
             return
 
         self.config = config
+        self.created_actions.clear()
         for group in config.menus:
             if group.name == "Full QGIS":
                 continue

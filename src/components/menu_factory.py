@@ -94,7 +94,6 @@ class PortalMenuFactory:
             return
 
         self.config = config
-        self.created_actions.clear()
         for group in config.menus:
             if group.name == "Full QGIS":
                 continue

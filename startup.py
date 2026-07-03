@@ -17,7 +17,7 @@ from src.components.menu_factory import PortalMenuFactory
 
 
 class PortalCrafterPlugin:
-    TP_TAG = "PortalCrafter|plugin"
+    TP_TAG = "PortalCrafter"
     INDEX_PATH = str(Path("/media/george-corea/GIS/Projects/QGIS_PortalCrafter/portal_profiles.yaml"))
 
     def _ep(self, message: str) -> None:

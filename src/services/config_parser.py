@@ -66,7 +66,7 @@ class ProfileIndex:
 
 
 class PortalConfigParser:
-    MARKER = "PortalCrafter|config"
+    MARKER = "PortalCrafter"
 
     def __init__(self, index_path: str | Path) -> None:
         self.index_path = Path(index_path)

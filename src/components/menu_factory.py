@@ -14,7 +14,8 @@ from src.services.layer_registry import LayerRegistry, purge_active_portal_layer
 
 
 class PortalMenuFactory:
-    TP_TAG = "PortalCrafter|menu_factory"
+    TP_TAG = "PortalCrafter"
+    _boot_titles_seen = set()
 
     def __init__(self, iface, registry: LayerRegistry, parser: PortalConfigParser):
         self.iface = iface
@@ -27,6 +28,7 @@ class PortalMenuFactory:
         self._active_profile_id: Optional[str] = None
         self._profile_selected_callback: Optional[Callable[[str, str], None]] = None
         self.profile_menus: Dict[str, QMenu] = {}
+        self._boot_root_title = "PortalCrafter"
 
     def _ep(self, message: str) -> None:
         QgsMessageLog.logMessage(message, self.TP_TAG, level=Qgis.MessageLevel.Warning)
@@ -35,10 +37,35 @@ class PortalMenuFactory:
         menubar = self.iface.mainWindow().menuBar()
         for action in list(menubar.actions()):
             menu = action.menu()
-            if menu is not None and menu.title() == "PortalCrafter":
+            if menu is not None and menu.title() == self._boot_root_title:
                 menubar.removeAction(action)
+        type(self)._boot_titles_seen.discard(self._boot_root_title)
 
     def build_boot_anchors(self, index: ProfileIndex, profile_click_callback: Optional[Callable[[str, str], None]] = None) -> Dict[str, QMenu]:
+        menubar = self.iface.mainWindow().menuBar()
+        existing = next(
+            (
+                action
+                for action in menubar.actions()
+                if action.menu() is not None and action.menu().title() == self._boot_root_title
+            ),
+            None,
+        )
+        if existing is not None:
+            self._ep("suppressing duplicate boot anchor build: %s" % self._boot_root_title)
+            return {
+                action.menu().title(): action.menu()
+                for action in menubar.actions()
+                if action.menu() is not None and action.menu().title() == self._boot_root_title
+            }
+        if self._boot_root_title in type(self)._boot_titles_seen:
+            self._ep("suppressing duplicate boot anchor build by seen-set: %s" % self._boot_root_title)
+            return {
+                action.menu().title(): action.menu()
+                for action in menubar.actions()
+                if action.menu() is not None and action.menu().title() == self._boot_root_title
+            }
+        type(self)._boot_titles_seen.add(self._boot_root_title)
         self._ep("build_boot_anchors profiles=%s" % ",".join(index.ids()))
         self.purge_existing_menus()
         self.index = index

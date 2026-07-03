@@ -71,7 +71,6 @@ class PortalCrafterPlugin:
             self.index,
             profile_click_callback=self.transition_portal_profile,
         )
-        self.apply_profile_lazy(self.index.profiles[0].profile_id)
         self._ep("initGui exit")
 
     def transition_portal_profile(self, target_profile_id: str, config_file: Optional[str] = None) -> None:

@@ -30,28 +30,12 @@ class PortalCrafterPlugin:
         self.menu_factory: Optional[PortalMenuFactory] = None
         self.index = None
 
-    def _clean_deployed(self) -> None:
-        active_dir = Path(__file__).resolve().parent
-        plugin_dir = active_dir.parent
-        try:
-            results = DeploymentCleanup.clean_deployed(plugin_root=plugin_dir, active_dir=active_dir)
-            removed = sum(1 for _, ok, _ in results if ok)
-            if removed:
-                QgsMessageLog.logMessage(
-                    "PortalCrafter: cleaned %d deployed module artifacts before bootstrap."
-                    % removed,
-                    level=Qgis.MessageLevel.Info,
-                )
-        except Exception as exc:
-            self._ep("clean_deployed failed: %s" % exc)
-
     def initGui(self):
         QgsMessageLog.logMessage(
             "PortalCrafter: initGui STAGE=init two-tier",
             level=Qgis.MessageLevel.Info,
         )
         self._ep("initGui enter")
-        self._clean_deployed()
 
         self.index = self.parser.boot_loader()
         if not self.index.profiles:

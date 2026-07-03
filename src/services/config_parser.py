@@ -95,7 +95,7 @@ class PortalConfigParser:
             self._log("Failed to parse profile index: %s" % exc, level="warning")
             return ProfileIndex(profiles=[])
 
-        roles = raw.get("roles", []) if isinstance(raw, dict) else []
+        roles = raw.get("profiles", []) if isinstance(raw, dict) else []
         entries: List[ProfileIndexEntry] = []
         for role in roles if isinstance(roles, list) else []:
             if not isinstance(role, dict):

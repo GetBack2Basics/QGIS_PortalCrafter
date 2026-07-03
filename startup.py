@@ -11,7 +11,7 @@ from qgis.utils import iface
 import os
 
 from src.services.config_parser import PortalConfigParser
-from src.services.layer_registry import purge_active_portal_layers
+from src.services.layer_registry import LayerRegistry, purge_active_portal_layers
 from src.services.deployment_cleanup import DeploymentCleanup
 from src.components.menu_factory import PortalMenuFactory
 

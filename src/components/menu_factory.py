@@ -1,88 +1,92 @@
-# DeployUTCMarker=202607020620
+# DeployUTCMarker=202607030447
 from __future__ import annotations
 
 from pathlib import Path
 from typing import Callable, Dict, List, Optional
 
-from qgis.core import QgsMapLayer, QgsMessageLog, Qgis
+from qgis.core import QgsMessageLog, Qgis
 from qgis.PyQt.QtWidgets import QMenu, QAction
 from qgis.PyQt.QtCore import QCoreApplication
 
 from src.data.config_schema import Menu, MenuItem, MenuItemCluster, MenuItemLayer, PortalConfig
-from src.services.layer_registry import LayerRegistry
+from src.services.config_parser import ProfileIndex, ProfileIndexEntry, PortalConfigParser
+from src.services.layer_registry import LayerRegistry, purge_active_portal_layers
 
 
 class PortalMenuFactory:
     TP_TAG = "PortalCrafter|menu_factory"
 
-    def __init__(self, iface, registry: LayerRegistry, config: PortalConfig):
+    def __init__(self, iface, registry: LayerRegistry, parser: PortalConfigParser):
         self.iface = iface
         self.registry = registry
-        self.config = config
+        self.parser = parser
+        self.index: Optional[ProfileIndex] = None
+        self.config: Optional[PortalConfig] = None
         self.created_actions: List[QAction] = []
         self.loaded_keys: Dict[str, bool] = {}
-        self._active_profile_name = "PortalCrafter"
-        self._profile_click_callback: Optional[Callable[[str], None]] = None
+        self._active_profile_id: Optional[str] = None
+        self._profile_selected_callback: Optional[Callable[[str, str], None]] = None
+        self.profile_menus: Dict[str, QMenu] = {}
 
     def _ep(self, message: str) -> None:
         QgsMessageLog.logMessage(message, self.TP_TAG, level=Qgis.MessageLevel.Warning)
 
-    def _item_key(self, item: "MenuItem | MenuItemCluster") -> str:
-        if isinstance(item, MenuItemCluster):
-            return "cluster::%s" % item.name
-        return "%s::%s" % (item.name, item.layer_name)
-
-    def build(self, active_profile_name: str = "PortalCrafter", profile_click_callback=None) -> None:
-        self.created_actions.clear()
-        self.loaded_keys.clear()
-        self._active_profile_name = active_profile_name or "PortalCrafter"
-        self._profile_click_callback = profile_click_callback
+    def purge_existing_menus(self) -> None:
         menubar = self.iface.mainWindow().menuBar()
-        root_title = "PortalCrafter"
-
-        self._ep("build start active=%s" % self._active_profile_name)
-
-        # Remove any existing PortalCrafter root menu entirely to avoid duplicates.
         for action in list(menubar.actions()):
             menu = action.menu()
-            if menu is None:
-                continue
-            try:
-                title = menu.title()
-            except Exception:
-                continue
-            if title == root_title:
-                self._ep("removing existing root menu '%s'" % root_title)
+            if menu is not None and menu.title() == "PortalCrafter":
                 menubar.removeAction(action)
-                QMenu(action.parent() if action.parent() is not None else self.iface.mainWindow()).removeAction(action)  # type: ignore[]
 
-        root = QMenu(root_title, menubar)
-        menubar.addMenu(root)
+    def build_boot_anchors(self, index: ProfileIndex, profile_click_callback: Optional[Callable[[str, str], None]] = None) -> Dict[str, QMenu]:
+        self._ep("build_boot_anchors profiles=%s" % ",".join(index.ids()))
+        self.purge_existing_menus()
+        self.index = index
+        self._profile_selected_callback = profile_click_callback
+        menubar = self.iface.mainWindow().menuBar()
 
-        available = self._available_profile_names()
-        self._ep("available profiles=%s" % ",".join(available))
-        for profile_name in available:
-            profile_menu = root.addMenu(profile_name)
-            if callable(self._profile_click_callback):
-                profile_menu.menuAction().triggered.connect(
-                    lambda checked=False, p=profile_name: self._on_profile_menu_clicked(p)
-                )
-            if profile_name == self._active_profile_name:
-                self._ep("building functional items for=%s" % profile_name)
-                self._build_functional_items(profile_menu)
-                self._attach_switchers(profile_menu)
+        created: Dict[str, QMenu] = {}
+        for entry in index.profiles:
+            menu = QMenu(entry.name, menubar)
+            action = QAction("Load %s Workspace" % entry.name, self.iface.mainWindow())
+            action.triggered.connect(
+                lambda checked=False, entry=entry: self._on_profile_clicked(entry)
+            )
+            menu.addAction(action)
+            menubar.addMenu(menu)
+            self.profile_menus[entry.profile_id] = menu
+            created[entry.profile_id] = menu
+            self._ep("boot_anchor profile=%s" % entry.profile_id)
+        self._active_profile_id = index.profiles[0].profile_id if index.profiles else None
+        return created
 
-        QgsMessageLog.logMessage(
-            "PortalCrafter: rendered profiles under '%s' active='%s'"
-            % (root_title, self._active_profile_name),
-            level=Qgis.MessageLevel.Info,
-        )
-
-    def _build_functional_items(self, root_menu: "QMenu") -> None:
-        if not self.config.menus:
-            self._ep("no menus in config")
+    def build_submenus_for_profile(self, profile_id: str, overwrite: bool = True) -> None:
+        self._ep("lazy submenu build profile=%s" % profile_id)
+        root_menu = self.profile_menus.get(profile_id)
+        if root_menu is None:
+            self._ep("lazy submenu missing top-level menu for profile=%s" % profile_id)
             return
-        for group in self.config.menus:
+        if overwrite:
+            while root_menu.actions():
+                root_menu.removeAction(root_menu.actions()[0])
+        entry = None
+        if self.index:
+            entry = self.index.find(profile_id)
+        if entry is None:
+            self._ep("lazy submenu missing profile index for=%s" % profile_id)
+            return
+
+        config = self.parser.lazy_loader(profile_id)
+        if config is None:
+            self._ep("lazy submenu missing config for=%s" % profile_id)
+            missing_action = QAction("Configuration unavailable for '%s'" % entry.name, self.iface.mainWindow())
+            missing_action.setEnabled(False)
+            root_menu.addAction(missing_action)
+            self.created_actions.append(missing_action)
+            return
+
+        self.config = config
+        for group in config.menus:
             if group.name == "Full QGIS":
                 continue
             branch = root_menu.addMenu(group.name)
@@ -103,47 +107,41 @@ class PortalMenuFactory:
                     sub.addAction(action)
                     self.created_actions.append(action)
 
-    def _attach_switchers(self, root_menu: "QMenu") -> None:
-        for profile_name in self._available_profile_names():
-            if profile_name == self._active_profile_name:
+        switcher_action = QAction("Switch Workspace", self.iface.mainWindow())
+        menubar = self.iface.mainWindow().menuBar()
+        switcher_menu = QMenu("Switch Workspace", menubar)
+        for index_entry in self.index.profiles if self.index else []:
+            if index_entry.profile_id == profile_id:
                 continue
-            action = QAction("Switch to %s Workspace" % profile_name, self.iface.mainWindow())
+            action = QAction("Switch to %s Workspace" % index_entry.name, self.iface.mainWindow())
             action.triggered.connect(
-                lambda checked=False, target=profile_name: self._on_profile_switch_requested(target)
+                lambda checked=False, target=index_entry.profile_id, path=index_entry.config_file: self._on_profile_switch_requested(target, path)
             )
-            root_menu.addAction(action)
+            switcher_menu.addAction(action)
             self.created_actions.append(action)
+        switcher_action.setMenu(switcher_menu)
+        root_menu.addAction(switcher_action)
+        self.created_actions.append(switcher_action)
 
-    def _available_profile_names(self) -> List[str]:
-        discovered: List[str] = []
-        try:
-            base = Path("/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects")
-            if base.exists():
-                for path in sorted(base.glob("*.qgz")):
-                    discovered.append(path.stem)
-        except Exception as exc:
-            self._ep("profile discovery failed: %s" % exc)
-        if not discovered:
-            self._ep("no qgz profiles found; falling back to defaults")
-            discovered = ["Cultural", "Environment"]
-        else:
-            self._ep("discovered profiles from qgz: %s" % ",".join(discovered))
-        return discovered
+        self._active_profile_id = profile_id
+        self._ep("lazy submenu complete profile=%s menus=%d" % (profile_id, len(config.menus)))
 
-    def _on_profile_menu_clicked(self, profile_name: str) -> None:
-        if callable(self._profile_click_callback):
-            self._ep("profile menu clicked=%s" % profile_name)
-            self._profile_click_callback(profile_name)
+    def _item_key(self, item: "MenuItem | MenuItemCluster") -> str:
+        if isinstance(item, MenuItemCluster):
+            return "cluster::%s" % item.name
+        return "%s::%s" % (item.name, item.layer_name)
 
-    def _on_profile_switch_requested(self, target_profile_name: str) -> None:
-        if callable(self._profile_click_callback):
-            self._ep("switch requested=%s" % target_profile_name)
-            self._profile_click_callback(target_profile_name)
+    def _on_profile_clicked(self, entry: ProfileIndexEntry) -> None:
+        self._ep("profile clicked=%s" % entry.profile_id)
+        if callable(self._profile_selected_callback):
+            self._profile_selected_callback(entry.profile_id, entry.config_file)
 
-    def _on_item_triggered(self, item: "MenuItem | MenuItemCluster", action: "QAction", key: str) -> None:
-        self._on_batch_triggered([item], action, key)
+    def _on_profile_switch_requested(self, target_profile_id: str, config_file: str) -> None:
+        self._ep("switch requested id=%s" % target_profile_id)
+        if callable(self._profile_selected_callback):
+            self._profile_selected_callback(target_profile_id, config_file)
 
-    def _on_batch_triggered(self, layers_block: list, action: "QAction", key: str) -> None:
+    def _on_batch_triggered(self, layers_block: list, action: QAction, key: str) -> None:
         if key in self.loaded_keys:
             return
         tr = QCoreApplication.translate
@@ -213,7 +211,7 @@ class PortalMenuFactory:
         qgs_layer = self.registry.build_single_vector_layer(layer)
         if not qgs_layer or not qgs_layer.isValid():
             QgsMessageLog.logMessage(
-                tr("PortalCrafter", "Invalid vector layer in batch: %s") % layer.name,
+                tr("PortalMenuFactory", "Invalid vector layer in batch: %s") % layer.name,
                 level=Qgis.MessageLevel.Warning,
             )
             return
@@ -236,7 +234,7 @@ class PortalMenuFactory:
             self.registry.apply_scale_visibility(layer, meta)
 
     def _finalize_loaded_layer(self, layer, item) -> None:
-        if isinstance(layer, QgsMapLayer):
+        if hasattr(layer, '__class__') and layer.__class__.__name__ == "QgsMapLayer":
             self._apply_scale_visibility_if_any(layer, item)
             try:
                 self.iface.mapCanvas().refresh()

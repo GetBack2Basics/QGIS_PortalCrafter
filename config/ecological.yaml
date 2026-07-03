@@ -1,0 +1,25 @@
+# config/ecological.yaml - Ecological Workspace Profile Specifications
+profile_metadata:
+  id: "ecological"
+  name: "Ecological Workspace"
+  project_workspace: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects/ecological.qgz"
+
+interface_customization:
+  hidden_toolbars: ["mAdvancedDigitizingToolBar", "mRasterToolBar", "mSnappingToolBar"]
+  hidden_docks: ["Browser", "ProcessingToolbox"]
+
+menus:
+  - name: "Environmental & Biodiversity Constraints"
+    submenus:
+      - name: "State Planning Instruments"
+        items:
+          - name: "Load Terrestrial Biodiversity Zones"
+            layer_name: "Terrestrial Biodiversity Zones (SHP)"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/epi_terrestrial_biodiversity/epi_terrestrial_biodiversity.shp"
+          - name: "Load Regional Corridors"
+            layer_name: "Regional Biodiversity Corridors (KML)"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/regional_biodiversity_corridors.kml"

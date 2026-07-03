@@ -1,131 +1,91 @@
-# DeployUTCMarker=202607020620
+# DeployUTCMarker=202607030447
 from __future__ import annotations
 
-from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from qgis.core import QgsMessageLog, Qgis, QgsProject
-from qgis.PyQt.QtWidgets import QMenu, QAction
+from qgis.core import QgsMessageLog, Qgis
+from qgis.PyQt.QtWidgets import QAction
 from qgis.PyQt.QtCore import Qt
 from qgis.utils import iface
 import os
 
-# Deploy version marker for identifying deployed build.
-PLUGIN_VERSION = datetime.now().strftime("%Y%m%d%H%M")
-
 from src.services.config_parser import PortalConfigParser
-from src.services.layer_registry import LayerRegistry, purge_active_portal_layers
+from src.services.layer_registry import purge_active_portal_layers
 from src.services.deployment_cleanup import DeploymentCleanup
 from src.components.menu_factory import PortalMenuFactory
 
 
 class PortalCrafterPlugin:
     TP_TAG = "PortalCrafter|plugin"
+    INDEX_PATH = str(Path("/media/george-corea/GIS/Projects/QGIS_PortalCrafter/portal_profiles.yaml"))
 
     def _ep(self, message: str) -> None:
         QgsMessageLog.logMessage(message, self.TP_TAG, level=Qgis.MessageLevel.Warning)
 
     def __init__(self, iface):
         self.iface = iface
-        self.parser = PortalConfigParser(
-            "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/portal_config.yaml"
-        )
+        self.parser = PortalConfigParser(self.INDEX_PATH)
         self.registry = LayerRegistry()
         self.menu_factory: Optional[PortalMenuFactory] = None
-        self._root_menu: Optional[QMenu] = None
-        self._active_profile: str = "PortalCrafter"
+        self.index = None
 
     def _clean_deployed(self) -> None:
         active_dir = Path(__file__).resolve().parent
         plugin_dir = active_dir.parent
-        results = DeploymentCleanup.clean_deployed(plugin_root=plugin_dir, active_dir=active_dir)
-        removed = sum(1 for _, ok, _ in results if ok)
-        if removed:
-            QgsMessageLog.logMessage(
-                "PortalCrafter: cleaned %d deployed module artifacts before bootstrap."
-                % removed,
-                level=Qgis.MessageLevel.Info,
-            )
-
-    def _available_profile_names(self) -> "list[str]":
-        discovered: "list[str]" = []
         try:
-            base = Path("/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects")
-            if base.exists():
-                for path in sorted(base.glob("*.qgz")):
-                    discovered.append(path.stem)
+            results = DeploymentCleanup.clean_deployed(plugin_root=plugin_dir, active_dir=active_dir)
+            removed = sum(1 for _, ok, _ in results if ok)
+            if removed:
+                QgsMessageLog.logMessage(
+                    "PortalCrafter: cleaned %d deployed module artifacts before bootstrap."
+                    % removed,
+                    level=Qgis.MessageLevel.Info,
+                )
         except Exception as exc:
-            self._ep("profile discovery failed: %s" % exc)
-            QgsMessageLog.logMessage(
-                "PortalCrafter: profile discovery failed: %s" % exc,
-                "PortalCrafter",
-                level=Qgis.MessageLevel.Warning,
-            )
-        if not discovered:
-            discovered = ["Cultural", "Environment"]
-        QgsMessageLog.logMessage(
-            "PortalCrafter: discovered profiles=%s" % ",".join(discovered),
-            "PortalCrafter",
-            level=Qgis.MessageLevel.Info,
-        )
-        return discovered
+            self._ep("clean_deployed failed: %s" % exc)
 
     def initGui(self):
         QgsMessageLog.logMessage(
-            "PortalCrafter: initGui STAGE=init version=%s build=%s"
-            % (PLUGIN_VERSION, Path(__file__).resolve()),
+            "PortalCrafter: initGui STAGE=init two-tier",
             level=Qgis.MessageLevel.Info,
         )
         self._ep("initGui enter")
         self._clean_deployed()
-        iface = self.iface
 
-        available = self._available_profile_names()
-        initial_profile = available[0] if available else "Cultural"
+        self.index = self.parser.boot_loader()
+        if not self.index.profiles:
+            QgsMessageLog.logMessage(
+                "PortalCrafter: no profiles loaded from %s" % self.INDEX_PATH,
+                level=Qgis.MessageLevel.Critical,
+            )
+            return
         QgsMessageLog.logMessage(
-            "PortalCrafter: initGui initial_profile=%s" % initial_profile,
+            "PortalCrafter: boot loaded profiles=%s" % ",".join(self.index.ids()),
             level=Qgis.MessageLevel.Info,
         )
-        self.transition_portal_profile(initial_profile)
+
+        self.menu_factory = PortalMenuFactory(self.iface, self.registry, self.parser)
+        self.menu_factory.purge_existing_menus()
+        self.menu_factory.build_boot_anchors(
+            self.index,
+            profile_click_callback=self.transition_portal_profile,
+        )
+        self.apply_profile_lazy(self.index.profiles[0].profile_id)
         self._ep("initGui exit")
 
-    def transition_portal_profile(self, target_profile_name: str) -> None:
-        QgsMessageLog.logMessage(
-            "PortalCrafter: transition_portal_profile start target=%s" % target_profile_name,
-            level=Qgis.MessageLevel.Info,
-        )
-        self._ep("transition enter target=%s" % target_profile_name)
+    def transition_portal_profile(self, target_profile_id: str, config_file: Optional[str] = None) -> None:
+        self._ep("transition enter target=%s" % target_profile_id)
         try:
             purge_active_portal_layers()
-            self._load_profile_project(target_profile_name)
-            if not self.parser.load():
-                QgsMessageLog.logMessage(
-                    "PortalCrafter: config loader returned False.",
-                    level=Qgis.MessageLevel.Warning,
-                )
-                return
-            config = self.parser.validate()
-            if config is None:
-                QgsMessageLog.logMessage(
-                    "PortalCrafter: config schema validation failed.",
-                    level=Qgis.MessageLevel.Warning,
-                )
-                return
+            project_path = self._profile_project_path(target_profile_id)
+            if project_path and os.path.exists(project_path):
+                self.iface.mainWindow().setCursor(Qt.CursorShape.WaitCursor)
+                QgsProject.instance().read(project_path)
+                self.iface.mainWindow().setCursor(Qt.CursorShape.ArrowCursor)
+            self.menu_factory.build_submenus_for_profile(target_profile_id, overwrite=True)
             QgsMessageLog.logMessage(
-                "PortalCrafter: config loaded menus=%d custom_searches=%d"
-                % (len(config.menus), len(config.custom_searches)),
-                level=Qgis.MessageLevel.Info,
-            )
-            self.registry.register_config(config)
-            self.menu_factory = PortalMenuFactory(self.iface, self.registry, config)
-            self.menu_factory.build(
-                active_profile_name=target_profile_name,
-                profile_click_callback=self.transition_portal_profile,
-            )
-            self._active_profile = target_profile_name
-            QgsMessageLog.logMessage(
-                "PortalCrafter CPO ready (%s)." % target_profile_name,
+                "PortalCrafter: profile transition complete target=%s" % target_profile_id,
                 level=Qgis.MessageLevel.Info,
             )
         except Exception as exc:
@@ -136,38 +96,36 @@ class PortalCrafterPlugin:
             )
             self._ep("transition failed: %s" % exc)
 
-    def _load_profile_project(self, target_profile_name: str) -> None:
-        project_path = "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects/%s.qgz" % target_profile_name
+    def _profile_project_path(self, target_profile_id: str) -> Optional[str]:
+        entry = None
+        if self.index:
+            entry = self.index.find(target_profile_id)
+        if entry is None or not entry.project_workspace:
+            base = Path("/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects")
+            candidate = base / ("%s.qgz" % target_profile_id)
+            return str(candidate) if candidate.exists() else None
+        return entry.project_workspace
+
+    def apply_profile_lazy(self, target_profile_id: str) -> None:
+        if self.menu_factory is None:
+            return
+        if target_profile_id not in (self.index.profiles if self.index else []):
+            return
+        QgsMessageLog.logMessage(
+            "PortalCrafter: lazy apply start profile=%s" % target_profile_id,
+            level=Qgis.MessageLevel.Info,
+        )
+        purge_active_portal_layers()
+        project_path = self._profile_project_path(target_profile_id)
         if project_path and os.path.exists(project_path):
             self.iface.mainWindow().setCursor(Qt.CursorShape.WaitCursor)
-            ok = QgsProject.instance().read(project_path)
+            QgsProject.instance().read(project_path)
             self.iface.mainWindow().setCursor(Qt.CursorShape.ArrowCursor)
-            if not ok:
-                QgsMessageLog.logMessage(
-                    "QgsProject.read failed: %s" % project_path,
-                    "PortalCrafter",
-                    level=Qgis.MessageLevel.Critical,
-                )
-        else:
-            QgsMessageLog.logMessage(
-                "PortalCrafter: missing profile project file '%s'; continuing with current project."
-                % project_path,
-                level=Qgis.MessageLevel.Warning,
-            )
-
-    def reset_loaded_keys(self) -> None:
-        if self.menu_factory is not None:
-            self.menu_factory.loaded_keys.clear()
-        if self._root_menu is not None:
-            for action in self._root_menu.actions():
-                action.setEnabled(True)
+        self.menu_factory.build_submenus_for_profile(target_profile_id, overwrite=False)
 
     def unload(self):
-        menubar = self.iface.mainWindow().menuBar()
-        for action in list(menubar.actions()):
-            menu = action.menu()
-            if menu is not None and menu.title() == "PortalCrafter":
-                menubar.removeAction(action)
+        if self.menu_factory is not None:
+            self.menu_factory.purge_existing_menus()
         QgsMessageLog.logMessage(
             "PortalCrafter: unloaded",
             level=Qgis.MessageLevel.Info,

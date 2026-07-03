@@ -1,0 +1,20 @@
+# config/cultural.yaml - Cultural Workspace Profile Specifications
+profile_metadata:
+  id: "cultural"
+  name: "Cultural Workspace"
+  project_workspace: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects/cultural.qgz"
+
+interface_customization:
+  hidden_toolbars: ["mAdvancedDigitizingToolBar", "mRasterToolBar", "mSnappingToolBar"]
+  hidden_docks: ["Browser", "ProcessingToolbox"]
+
+menus:
+  - name: "Statutory Heritage Listings"
+    submenus:
+      - name: "State Heritage Act"
+        items:
+          - name: "Load Heritage Curtilages"
+            layer_name: "State Heritage Register (GeoJSON)"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/state_heritage_register.geojson"

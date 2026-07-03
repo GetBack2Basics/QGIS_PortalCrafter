@@ -1,0 +1,13 @@
+# portal_profiles.yaml - Master Index File
+metadata:
+  portal_name: "CPO Multi-Profile Workspace Portal"
+  version: "4.0.0"
+
+profiles:
+  - id: "cultural"
+    name: "Cultural Workspace"
+    config_file: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/config/cultural.yaml"
+
+  - id: "ecological"
+    name: "Ecological Workspace"
+    config_file: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/config/ecological.yaml"

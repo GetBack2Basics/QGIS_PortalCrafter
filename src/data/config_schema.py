@@ -88,6 +88,17 @@ class Menu:
 
 
 @dataclass(frozen=True)
+class ProfilePage:
+    profile: str
+
+
+@dataclass(frozen=True)
+class ProfileLink:
+    page: ProfilePage
+    profile_id_key: str
+
+
+@dataclass(frozen=True)
 class CustomSearch:
     search_name: str
     target_layer_name: str
@@ -104,4 +115,6 @@ class PortalConfig:
     interface_customization: Dict[str, object]
     menus: List[Menu]
     custom_searches: List[CustomSearch]
+    profile_page: Optional[ProfilePage] = None
+    profile_link: Optional[ProfileLink] = None
 

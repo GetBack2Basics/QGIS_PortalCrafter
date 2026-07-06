@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Callable, Dict, List, Optional
 
-from qgis.core import QgsMessageLog, Qgis
+from qgis.core import QgsMessageLog, Qgis, QgsProject
 from qgis.PyQt.QtWidgets import QMenu, QAction
 from qgis.PyQt.QtCore import QCoreApplication
 
@@ -25,6 +25,9 @@ class PortalMenuFactory:
         self.config: Optional[PortalConfig] = None
         self.created_actions: List[QAction] = []
         self.loaded_keys: Dict[str, bool] = {}
+        self._layer_blocks: Dict[str, list] = {}
+        self._action_map: Dict[str, QAction] = {}
+        self._loaded_layers: Dict[str, List[str]] = {}
         self._active_profile_id: Optional[str] = None
         self._profile_selected_callback: Optional[Callable[[str, str], None]] = None
         self.profile_menus: Dict[str, QMenu] = {}
@@ -76,23 +79,21 @@ class PortalMenuFactory:
         if target is None:
             self._ep("lazy submenu missing root menu for profile=%s" % profile_id)
             return
+
+        self._layer_blocks = {
+            k: v for k, v in self._layer_blocks.items()
+            if not bool(self.loaded_keys.get(k))
+        }
+
+        self.loaded_keys.clear()
+        self.created_actions.clear()
+
         if overwrite:
             for action in list(target.actions()):
                 menu = action.menu()
                 if menu is not None and str(menu.objectName()).startswith("portal_workingset_"):
                     target.removeAction(action)
                     menu.deleteLater()
-            for action in list(self.created_actions):
-                if hasattr(action, "_portal_layer_menu") and bool(action._portal_layer_menu):
-                    try:
-                        target.removeAction(action)
-                    except Exception:
-                        pass
-                    try:
-                        action.deleteLater()
-                    except Exception:
-                        pass
-            self.created_actions = list(target.actions())
 
         entry = None
         if self.index:
@@ -111,6 +112,7 @@ class PortalMenuFactory:
             return
 
         self.config = config
+        self._action_map = {}
         for group in config.menus:
             if group.name == "Full QGIS":
                 continue
@@ -132,10 +134,14 @@ class PortalMenuFactory:
                     )
                     action = QAction(item.name, self.iface.mainWindow())
                     key = self._item_key(item)
-                    action.setEnabled(not bool(self.loaded_keys.get(key)))
+                    action.setProperty("portal_item_name", item.name)
+                    action.setProperty("portal_layer_name", item.layer_name)
+                    action.setEnabled(True)
                     action.triggered.connect(
                         lambda checked=False, blk=layers_block, act=action, k=key: self._on_batch_triggered(blk, act, k)
                     )
+                    self._action_map[key] = action
+                    self._layer_blocks[key] = layers_block
                     sub.addAction(action)
                     self.created_actions.append(action)
 
@@ -191,7 +197,6 @@ class PortalMenuFactory:
                     level=Qgis.MessageLevel.Warning,
                 )
         self.loaded_keys[key] = True
-        action.setEnabled(False)
 
     def _load_menu_item(self, item: "MenuItem") -> None:
         tr = QCoreApplication.translate
@@ -265,10 +270,139 @@ class PortalMenuFactory:
         if hasattr(self.registry, 'apply_scale_visibility'):
             self.registry.apply_scale_visibility(layer, meta)
 
+    def _portal_close_label(self, item) -> str:
+        return "Close %s" % getattr(item, 'layer_name', None) or getattr(item, 'name', item)
+
+    def _init_close_action(self, action: "QAction", key: str, layers_block: list) -> None:
+        action.triggered.disconnect()
+        action.setProperty("portal_item_name", getattr(self, "_portal_action_item_name", None))
+        action.setProperty("portal_layer_name", getattr(self, "_portal_action_layer_name", None))
+        action.setProperty("portal_close_key", key)
+        action.triggered.connect(
+            lambda checked=False, act=action, k=key, blk=layers_block: self._on_close_triggered(blk, act, k)
+        )
+        action.setText("Close %s" % action.text())
+
+    def _qgs_layer_chain(self, layers_block: list):
+        candidates = []
+        for layer in layers_block:
+            name = getattr(layer, 'layer_name', None) or getattr(layer, 'name', None)
+            if not name:
+                continue
+            candidates.append(name)
+            candidates.append(getattr(layer, 'connection_info', None) and getattr(layer.connection_info, 'path', None))
+        return candidates
+
+    def _remove_loaded_layers(self, layers_block: list) -> None:
+        project = QgsProject.instance()
+        root = project.layerTreeRoot()
+        layer_chain = [c for c in self._qgs_layer_chain(layers_block) if c]
+        removed_children = []
+        groups_to_check = []
+        for name in layer_chain:
+            for layer in list(project.mapLayers().values()):
+                current_name = layer.name()
+                current_source = layer.source()
+                if current_name == name or current_source == name or name in current_source:
+                    node = root.findLayer(layer.id())
+                    if node is None:
+                        continue
+                    parent = node.parent()
+                    if parent is not None and parent != root and id(parent) not in {id(g) for g in groups_to_check}:
+                        groups_to_check.append(parent)
+                    removed_children.append(node)
+                    project.removeMapLayer(layer.id())
+        for group in groups_to_check:
+            count = sum(1 for _ in group.findLayers())
+            if count == 0 and id(group) not in {id(c) for c in removed_children}:
+                removed_children.append(group)
+        safe_removed = []
+        for child in removed_children:
+            try:
+                if hasattr(child, 'parent') and callable(child.parent):
+                    _ = child.parent()
+            except Exception:
+                continue
+            safe_removed.append(child)
+        for group in groups_to_check:
+            try:
+                count = sum(1 for _ in group.findLayers())
+                if count == 0:
+                    root.removeChildNode(group)
+            except Exception:
+                pass
+        try:
+            self.iface.mapCanvas().refresh()
+        except Exception:
+            pass
+
+    def _prune_empty_groups(self, action: "QAction") -> None:
+        root = QgsProject.instance().layerTreeRoot()
+        for child in list(action.associatedWidgets()) if hasattr(action, 'associatedWidgets') else []:
+            pass
+        for menu_action in self.created_actions:
+            menu = menu_action.menu()
+            if menu is not None and str(menu.objectName()).startswith("portal_workingset_"):
+                pass
+        visited = set()
+        for group_name in ("Cadastre", "Environmental Constraints", "Zoning & Land Management", "Terrain & Foundations", "Land Tenure & Infrastructure", "Statutory Heritage & Rights", "Base Imagery & Elevation", "Protected Estates & Vegetation", "Development Frameworks", "Physiographic Hazards", "High-Resolution Elevation"):
+            group = root.findGroup(group_name)
+            if group is None or id(group) in visited:
+                continue
+            visited.add(id(group))
+            if group.children():
+                continue
+            if not group.findLayers():
+                try:
+                    root.removeChildNode(group)
+                except Exception:
+                    pass
+
+    def _on_close_triggered(self, layers_block: list, action: QAction, key: str) -> None:
+        self._remove_loaded_layers(layers_block)
+        self._prune_empty_groups(action)
+        self.loaded_keys.pop(key, None)
+        self._layer_blocks.pop(key, None)
+        action.setProperty("portal_close_key", "")
+        action.triggered.disconnect()
+        action.triggered.connect(
+            lambda checked=False, blk=layers_block, act=action, k=key: self._on_batch_triggered(blk, act, k)
+        )
+        action.setEnabled(True)
+
     def _finalize_loaded_layer(self, layer, item) -> None:
+        layer_id = None
+        if hasattr(layer, 'id'):
+            layer_id = layer.id()
         if hasattr(layer, '__class__') and layer.__class__.__name__ == "QgsMapLayer":
             self._apply_scale_visibility_if_any(layer, item)
             try:
                 self.iface.mapCanvas().refresh()
             except Exception:
                 pass
+        key = "%s::%s" % (getattr(item, 'name', None), getattr(item, 'layer_name', None))
+        if key and layer_id:
+            self._loaded_layers.setdefault(key, []).append(layer_id)
+        act = self._action_map.get(key)
+        candidates = [
+            getattr(item, 'name', None),
+            getattr(item, 'layer_name', None),
+            layer.name() if hasattr(layer, 'name') else None,
+            layer.source() if hasattr(layer, 'source') else None,
+        ]
+        if act is None:
+            for k in candidates:
+                act = self._action_map.get(k)
+                if act is not None:
+                    break
+        if act is not None and key in self._layer_blocks:
+            self._init_close_action(act, key, self._layer_blocks[key])
+        else:
+            if getattr(item, 'name', None) and 'heritage' in str(getattr(item, 'name', None)).lower():
+                self._ep("heritage close not flipped item=%s layer_name=%s key=%s candidates=%s action_map_keys=%s" % (
+                    getattr(item, 'name', None),
+                    getattr(item, 'layer_name', None),
+                    key,
+                    candidates,
+                    list(self._action_map.keys())[:20],
+                ))

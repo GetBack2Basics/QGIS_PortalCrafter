@@ -1,4 +1,3 @@
-# config/ecological.yaml - Ecological/Biodiversity Workspace Profile Specifications
 profile_metadata:
   id: "ecological"
   name: "Biodiversity Workspace"
@@ -93,3 +92,28 @@ menus:
             provider: "gdal"
             connection_info:
               path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/raster/regional_ortho.tif"
+
+custom_searches:
+  - search_name: "Biodiversity zones"
+    target_layer_name: "Terrestrial Biodiversity (LEP)"
+    search_attribute: "LEP_NAME"
+    comparison_operator: "Equals"
+    ui_hint: "Search terrestrial biodiversity zones by LEP name."
+    results_display_columns: ["LEP_NAME", "OBJECTID"]
+    default_zoom_scale: 2500
+
+  - search_name: "Reserve estates"
+    target_layer_name: "Estate Reserves (NPWS)"
+    search_attribute: "NAME"
+    comparison_operator: "Equals"
+    ui_hint: "Search NPWS estate reserves by reserve name."
+    results_display_columns: ["NAME", "RESERVE_TYPE"]
+    default_zoom_scale: 2500
+
+  - search_name: "Mine subsidence districts"
+    target_layer_name: "Mine Subsidence Districts"
+    search_attribute: "DISTRICT_NAME"
+    comparison_operator: "Equals"
+    ui_hint: "Search mine subsidence district by district name."
+    results_display_columns: ["DISTRICT_NAME", "SUB_TYPE"]
+    default_zoom_scale: 2500

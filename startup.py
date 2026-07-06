@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 from qgis.core import QgsMessageLog, Qgis, QgsProject
-from qgis.PyQt.QtWidgets import QAction
+from qgis.PyQt.QtWidgets import QAction, QDockWidget
 from qgis.PyQt.QtCore import Qt
 from qgis.utils import iface
 import os
@@ -14,6 +14,7 @@ from src.services.config_parser import PortalConfigParser
 from src.services.layer_registry import LayerRegistry, purge_active_portal_layers
 from src.services.deployment_cleanup import DeploymentCleanup
 from src.components.menu_factory import PortalMenuFactory
+from src.components.search_dock import PortalSearchDock
 
 
 class PortalCrafterPlugin:
@@ -28,6 +29,7 @@ class PortalCrafterPlugin:
         self.parser = PortalConfigParser(self.INDEX_PATH)
         self.registry = LayerRegistry()
         self.menu_factory: Optional[PortalMenuFactory] = None
+        self.search_dock = None
         self.index = None
 
     def initGui(self):
@@ -55,6 +57,13 @@ class PortalCrafterPlugin:
             self.index,
             profile_click_callback=self.transition_portal_profile,
         )
+
+        first_config = None
+        if self.index and self.index.profiles:
+            first_config = self.parser.lazy_loader(self.index.profiles[0].profile_id)
+            self._ep("initGui search config type=%s" % type(first_config).__name__)
+        self.search_dock = PortalSearchDock(self.iface.mainWindow(), registry=self.registry, config=first_config)
+        self.iface.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.search_dock)
         self._ep("initGui exit")
 
     def transition_portal_profile(self, target_profile_id: str, config_file: Optional[str] = None) -> None:
@@ -67,6 +76,11 @@ class PortalCrafterPlugin:
                 QgsProject.instance().read(project_path)
                 self.iface.mainWindow().setCursor(Qt.CursorShape.ArrowCursor)
             self.menu_factory.build_submenus_for_profile(target_profile_id, overwrite=True)
+            if getattr(self, 'search_dock', None):
+                cfg = None
+                if self.index:
+                    cfg = self.parser.lazy_loader(target_profile_id)
+                self.search_dock.refresh(config=cfg)
             QgsMessageLog.logMessage(
                 "PortalCrafter: profile transition complete target=%s" % target_profile_id,
                 level=Qgis.MessageLevel.Info,

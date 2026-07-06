@@ -42,6 +42,7 @@ class PortalMenuFactory:
         self.profile_menus.clear()
         self.created_actions.clear()
         type(self)._boot_titles_seen.discard(self._boot_root_title)
+        self.root_menu = None
 
     def build_boot_anchors(self, index: ProfileIndex, profile_click_callback: Optional[Callable[[str, str], None]] = None) -> Dict[str, QMenu]:
         self.purge_existing_menus()
@@ -49,34 +50,50 @@ class PortalMenuFactory:
 
         root_menu = QMenu(self._boot_root_title, menubar)
         menubar.addMenu(root_menu)
+        self.root_menu = root_menu
 
         created: Dict[str, QMenu] = {}
         for entry in index.profiles:
-            profile_menu = root_menu.addMenu(entry.name)
-            action = QAction("Load %s Workspace" % entry.name, self.iface.mainWindow())
+            action = QAction(entry.name, self.iface.mainWindow())
             action.triggered.connect(
                 lambda checked=False, entry=entry: self._on_profile_clicked(entry)
             )
-            profile_menu.addAction(action)
-            self.profile_menus[entry.profile_id] = profile_menu
-            created[entry.profile_id] = profile_menu
-            self._ep("boot_anchor profile=%s" % entry.profile_id)
+            root_menu.addAction(action)
+            self.created_actions.append(action)
+            created[entry.profile_id] = root_menu
 
         self.index = index
         self._profile_selected_callback = profile_click_callback
         self._active_profile_id = index.profiles[0].profile_id if index.profiles else None
-        self._ep("build_boot_anchors profiles=%s" % ",".join(index.ids()))
+        self._ep("build_boot_anchors profiles=%s direct" % ",".join(index.ids()))
         return created
 
     def build_submenus_for_profile(self, profile_id: str, overwrite: bool = True) -> None:
         self._ep("lazy submenu build profile=%s" % profile_id)
-        root_menu = self.profile_menus.get(profile_id)
-        if root_menu is None:
-            self._ep("lazy submenu missing top-level menu for profile=%s" % profile_id)
+        target = None
+        if hasattr(self, "root_menu") and self.root_menu is not None:
+            target = self.root_menu
+        if target is None:
+            self._ep("lazy submenu missing root menu for profile=%s" % profile_id)
             return
         if overwrite:
-            while root_menu.actions():
-                root_menu.removeAction(root_menu.actions()[0])
+            for action in list(target.actions()):
+                menu = action.menu()
+                if menu is not None and str(menu.objectName()).startswith("portal_workingset_"):
+                    target.removeAction(action)
+                    menu.deleteLater()
+            for action in list(self.created_actions):
+                if hasattr(action, "_portal_layer_menu") and bool(action._portal_layer_menu):
+                    try:
+                        target.removeAction(action)
+                    except Exception:
+                        pass
+                    try:
+                        action.deleteLater()
+                    except Exception:
+                        pass
+            self.created_actions = list(target.actions())
+
         entry = None
         if self.index:
             entry = self.index.find(profile_id)
@@ -89,7 +106,7 @@ class PortalMenuFactory:
             self._ep("lazy submenu missing config for=%s" % profile_id)
             missing_action = QAction("Configuration unavailable for '%s'" % entry.name, self.iface.mainWindow())
             missing_action.setEnabled(False)
-            root_menu.addAction(missing_action)
+            target.addAction(missing_action)
             self.created_actions.append(missing_action)
             return
 
@@ -97,7 +114,14 @@ class PortalMenuFactory:
         for group in config.menus:
             if group.name == "Full QGIS":
                 continue
-            branch = root_menu.addMenu(group.name)
+            branch = target.addMenu(group.name)
+            branch.setObjectName("portal_workingset_%s" % profile_id)
+            persistor = QAction(branch)
+            try:
+                setattr(persistor, "_portal_layer_menu", True)
+            except Exception:
+                pass
+            self.created_actions.append(persistor)
             for submenu in group.submenus:
                 sub = branch.addMenu(submenu.name)
                 for item in submenu.items:
@@ -128,7 +152,7 @@ class PortalMenuFactory:
             switcher_menu.addAction(action)
             self.created_actions.append(action)
         switcher_action.setMenu(switcher_menu)
-        root_menu.addAction(switcher_action)
+        target.addAction(switcher_action)
         self.created_actions.append(switcher_action)
 
         self._active_profile_id = profile_id

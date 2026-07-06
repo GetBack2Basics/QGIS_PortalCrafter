@@ -4,7 +4,7 @@ __pycache__/
 .pytest_cache/
 
 # Isolate all base data assets locally
-input/
+# input/
 
 # Isolate dynamic desktop session logs
 *.log

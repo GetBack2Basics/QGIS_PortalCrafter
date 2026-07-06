@@ -1,3 +1,6 @@
+profiles:
+  cultural: "config/cultural.yaml"
+  ecological: "config/ecological.yaml"
 metadata:
   portal_name: "Conservation Planning & Offsets Portal"
   version: "4.0.0"

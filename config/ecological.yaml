@@ -1,107 +1,95 @@
-# config/ecological.yaml - Ecological Workspace Profile Specifications
+# config/ecological.yaml - Ecological/Biodiversity Workspace Profile Specifications
 profile_metadata:
   id: "ecological"
-  name: "Ecological Workspace"
-  project_workspace: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects/ecological.qgz"
+  name: "Biodiversity Workspace"
+  project_workspace: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/projects/ecological.qgz"
 
 interface_customization:
   hidden_toolbars: ["mAdvancedDigitizingToolBar", "mRasterToolBar", "mSnappingToolBar"]
   hidden_docks: ["Browser", "ProcessingToolbox"]
 
 menus:
-  - name: "Cadastre & Infrastructure"
+  - name: "Environmental Constraints"
     submenus:
-      - name: "Property & Roads"
+      - name: "Biodiversity Matrices"
         items:
-          - name: "Load Staging Parcels"
-            layer_name: "Staging Property Boundaries (GPKG)"
+          - name: "Terrestrial Biodiversity Zones"
+            layer_name: "Terrestrial Biodiversity (LEP)"
             provider: "ogr"
             connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/cadastre/nsw_parcels_staging.gpkg"
-              layer_name: "nsw_parcels_staging"
-          - name: "Load Local Roads"
-            layer_name: "Staging Road Network (SpatiaLite)"
-            provider: "ogr"
-            connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/roads/nsw_roads_staging.sqlite"
-              layer_name: "nsw_roads_staging"
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/heritage/epi_terrestrial_biodiversity.shp"
 
-  - name: "Statutory Conservation & Heritage"
+          - name: "Biodiversity Values Map"
+            layer_name: "Biodiversity Values Map (BVM)"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/environmental/bv_map.gpkg"
+
+          - name: "Regional Corridors"
+            layer_name: "Regional Biodiversity Corridors"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/heritage/regional_biodiversity_corridors.kml"
+
+      - name: "Protected Estates & Vegetation"
+        items:
+          - name: "Estate Reserves"
+            layer_name: "Estate Reserves (NPWS)"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/biodiversity/npws_estate_reserves.geojson"
+
+          - name: "Littoral Rainforests Overlays"
+            layer_name: "Littoral Rainforests (Protected)"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/environmental/littoral_rainforests.kml"
+
+  - name: "Zoning & Land Management"
     submenus:
-      - name: "Biodiversity & Planning"
+      - name: "Development Frameworks"
         items:
-          - name: "Load Core Ecosystem Constraints"
-            layers:
-              - layer_name: "BOS Biodiversity Values"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/environmental/bv_map.gpkg"
-                  layer_name: "bv_map"
-                scale_visibility:
-                  visible_zoomed_out_limit: 100000
-
-              - layer_name: "Coastal Wetlands Protection"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/environmental/wetlands/coastal_wetlands.shp"
-                scale_visibility:
-                  visible_zoomed_out_limit: 50000
-
-              - layer_name: "Littoral Rainforests Reserves"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/environmental/littoral_rainforests.kml"
-
-          - name: "Terrestrial Biodiversity"
-            layer_name: "Terrestrial Biodiversity Zones (SHP)"
+          - name: "Growth Centres Boundaries"
+            layer_name: "Growth Centres Boundaries"
             provider: "ogr"
             connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/epi_terrestrial_biodiversity/epi_terrestrial_biodiversity.shp"
-          - name: "Regional Biodiversity Corridors"
-            layer_name: "Regional Biodiversity Corridors (KML)"
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/environmental/growth_centres.sqlite"
+
+          - name: "Land Use Zoning"
+            layer_name: "Land Use Zoning (LEP)"
             provider: "ogr"
             connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/regional_biodiversity_corridors.kml"
-      - name: "Heritage Act Listings"
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/zoning/nsw_lep_zoning.gpkg"
+
+      - name: "Physiographic Hazards"
         items:
-          - name: "State Heritage Curtilages"
-            layer_name: "State Heritage Register (GeoJSON)"
+          - name: "Mine Subsidence Districts"
+            layer_name: "Mine Subsidence Districts"
             provider: "ogr"
             connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/state_heritage_register.geojson"
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/environmental_hazards/mine_subsidence_districts.geojson"
 
-  - name: "Elevation & Terrain Models"
+          - name: "Watercourses Network"
+            layer_name: "Hydrography Watercourses"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/hydrography/nsw_hydro_watercourses.geojson"
+
+  - name: "Terrain & Foundations"
     submenus:
-      - name: "Regional Terrain Datasets"
+      - name: "High-Resolution Elevation"
         items:
-          - name: "State-wide 10m DEM"
-            layer_name: "NSW Regional 10m Terrain Raster"
+          - name: "Hunter 1m Digital Elevation Model"
+            layer_name: "Hunter 1m DEM (LiDAR)"
             provider: "gdal"
             connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/raster/nsw_statewide_10m_dem.tif"
-          - name: "Hunter Region 1m DTM"
-            layer_name: "Hunter LiDAR 1m DTM (ELVIS Clip)"
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/raster/hunter_1m_dem.tif"
+            scale_visibility:
+              visible_zoomed_out_limit: 25000
+              visible_zoomed_in_limit: 0
+
+          - name: "Regional Aerial Orthophoto"
+            layer_name: "Regional Aerial Orthophoto"
             provider: "gdal"
             connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/raster/hunter_1m_dem.tif"
-
-      - name: "Administrative & Utility Overlays"
-        items:
-          - name: "Load Regional Governance & Infrastructure"
-            layers:
-              - layer_name: "Native Title Claims Area"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/administrative/native_title_claims.gpkg"
-                  layer_name: "native_title_claims"
-
-              - layer_name: "LGA Boundaries Matrix"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/administrative/local_gov/lga_boundaries.sqlite"
-                  layer_name: "lga_boundaries"
-
-              - layer_name: "Electricity Transmission Lines"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/infrastructure/power/transmission_lines.shp"
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/raster/regional_ortho.tif"

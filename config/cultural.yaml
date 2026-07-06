@@ -2,106 +2,92 @@
 profile_metadata:
   id: "cultural"
   name: "Cultural Workspace"
-  project_workspace: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/projects/cultural.qgz"
+  project_workspace: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/projects/cultural.qgz"
 
 interface_customization:
   hidden_toolbars: ["mAdvancedDigitizingToolBar", "mRasterToolBar", "mSnappingToolBar"]
   hidden_docks: ["Browser", "ProcessingToolbox"]
 
 menus:
-  - name: "Cadastre & Infrastructure"
+  - name: "Land Tenure & Infrastructure"
     submenus:
-      - name: "Property & Roads"
+      - name: "Property Boundaries"
         items:
-          - name: "Load Staging Parcels"
-            layer_name: "Staging Property Boundaries (GPKG)"
+          - name: "Major Rural Parcels"
+            layer_name: "Major Rural Parcels"
             provider: "ogr"
             connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/cadastre/nsw_parcels_staging.gpkg"
-              layer_name: "nsw_parcels_staging"
-          - name: "Load Local Roads"
-            layer_name: "Staging Road Network (SpatiaLite)"
-            provider: "ogr"
-            connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/roads/nsw_roads_staging.sqlite"
-              layer_name: "nsw_roads_staging"
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/cadastre/nsw_parcels_staging.gpkg"
+              sql: "SELECT * FROM nsw_parcels_staging WHERE area_hectares >= 10"
+            scale_visibility:
+              visible_zoomed_out_limit: 250000
+              visible_zoomed_in_limit: 0
 
-  - name: "Statutory Conservation & Heritage"
+          - name: "Standard Urban Lots"
+            layer_name: "Standard Urban Lots"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/cadastre/nsw_parcels_staging.gpkg"
+              sql: "SELECT * FROM nsw_parcels_staging WHERE area_hectares < 10"
+            scale_visibility:
+              visible_zoomed_out_limit: 150000
+              visible_zoomed_in_limit: 0
+
+      - name: "Transport Network"
+        items:
+          - name: "State Highways"
+            layer_name: "State Highways"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/transport/nsw_roads_staging.sqlite"
+              sql: "SELECT * FROM nsw_roads_staging WHERE roadType = 'Highway'"
+
+          - name: "Local Streets"
+            layer_name: "Local Streets"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/transport/nsw_roads_staging.sqlite"
+              sql: "SELECT * FROM nsw_roads_staging WHERE roadType NOT IN ('Highway', 'State Road')"
+            scale_visibility:
+              visible_zoomed_out_limit: 50000
+              visible_zoomed_in_limit: 0
+
+          - name: "Rail Infrastructure"
+            layer_name: "Rail Network"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/infrastructure/railways.kml"
+
+  - name: "Statutory Heritage & Rights"
     submenus:
-      - name: "Biodiversity & Planning"
-        items:
-          - name: "Load Core Ecosystem Constraints"
-            layers:
-              - layer_name: "BOS Biodiversity Values"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/environmental/bv_map.gpkg"
-                  layer_name: "bv_map"
-                scale_visibility:
-                  visible_zoomed_out_limit: 100000
-
-              - layer_name: "Coastal Wetlands Protection"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/environmental/wetlands/coastal_wetlands.shp"
-                scale_visibility:
-                  visible_zoomed_out_limit: 50000
-
-              - layer_name: "Littoral Rainforests Reserves"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/environmental/littoral_rainforests.kml"
-
-          - name: "Terrestrial Biodiversity"
-            layer_name: "Terrestrial Biodiversity Zones (SHP)"
-            provider: "ogr"
-            connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/epi_terrestrial_biodiversity/epi_terrestrial_biodiversity.shp"
-          - name: "Regional Biodiversity Corridors"
-            layer_name: "Regional Biodiversity Corridors (KML)"
-            provider: "ogr"
-            connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/regional_biodiversity_corridors.kml"
-      - name: "Heritage Act Listings"
+      - name: "Heritage Registers"
         items:
           - name: "State Heritage Curtilages"
-            layer_name: "State Heritage Register (GeoJSON)"
+            layer_name: "State Heritage Register"
             provider: "ogr"
             connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/heritage/state_heritage_register.geojson"
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/heritage/state_heritage_register.geojson"
 
-  - name: "Elevation & Terrain Models"
+      - name: "Indigenous & Customary Land"
+        items:
+          - name: "Native Title Claims"
+            layer_name: "Native Title Claims"
+            provider: "ogr"
+            connection_info:
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/administrative/native_title_claims.gpkg"
+
+  - name: "Base Imagery & Elevation"
     submenus:
-      - name: "Regional Terrain Datasets"
+      - name: "Raster Foundation Layers"
         items:
-          - name: "State-wide 10m DEM"
-            layer_name: "NSW Regional 10m Terrain Raster"
+          - name: "Regional Aerial Orthophoto"
+            layer_name: "Regional Aerial Orthophoto"
             provider: "gdal"
             connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/raster/nsw_statewide_10m_dem.tif"
-          - name: "Hunter Region 1m DTM"
-            layer_name: "Hunter LiDAR 1m DTM (ELVIS Clip)"
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/raster/regional_ortho.tif"
+
+          - name: "Statewide 10m Digital Elevation Model"
+            layer_name: "Statewide 10m DEM"
             provider: "gdal"
             connection_info:
-              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/raster/hunter_1m_dem.tif"
-
-      - name: "Administrative & Utility Overlays"
-        items:
-          - name: "Load Regional Governance & Infrastructure"
-            layers:
-              - layer_name: "Native Title Claims Area"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/administrative/native_title_claims.gpkg"
-                  layer_name: "native_title_claims"
-
-              - layer_name: "LGA Boundaries Matrix"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/administrative/local_gov/lga_boundaries.sqlite"
-                  layer_name: "lga_boundaries"
-
-              - layer_name: "Electricity Transmission Lines"
-                provider: "ogr"
-                connection_info:
-                  path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/infrastructure/power/transmission_lines.shp"
+              path: "/media/george-corea/GIS/Projects/QGIS_PortalCrafter/input/library/raster/nsw_statewide_10m_dem.tif"
